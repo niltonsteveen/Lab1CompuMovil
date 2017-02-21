@@ -37,5 +37,6 @@
     <string name="error_campo_alfabetico">Alphabetical input</string>
     <string name="error_sinta">Invalid email address</string>
     <string name="selected_sexo">You must select one gender</string>
+    <string name="Educacion">Education</string>
 
 </resources>
