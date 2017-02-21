@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="primary" type="color">#e53935</item>
+    <item name="primaryDark" type="color">#b71c1c</item>
+    <item name="indigo" type="color">#bf360c</item>
+    <item name="teal" type="color">#bf360c</item>
+    <item name="orange" type="color">#FF5722</item>
+    <item name="letter" type="color">#FFFFFF</item>
+    <item name="black" type="color">#212121</item>
+    <item name="accent" type="color">#ef5350</item>
+</resources>

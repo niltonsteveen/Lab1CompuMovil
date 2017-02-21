@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">LabsCM20171</string>
+    <string name="activity_PersonalInfo">Información Personal</string>
+    <string name="name">Nombres</string>
+    <string name="lastName">Apellidos</string>
+    <string name="sex">Sexo</string>
+    <string name="scholarship">Grado de Escolaridad</string>
+    <string name="next">Siguiente</string>
+    <string name="activity_ContactInfo">Información de Contacto</string>
+    <string name="numberContact">Teléfono</string>
+    <string name="email">Correo Electrónico</string>
+    <string name="country">País</string>
+    <string name="cityName">Ciudad</string>
+    <string name="direction">Direccion</string>
+    <string name="pasatiempos">Pasatiempos</string>
+    <string name="mostrar">Mostrar</string>
+    <string name="activity_OtherInfo">Información Complementaria</string>
+    <string name="date">Fecha de Nacimiento</string>
+    <string name="Men">Masculino</string>
+    <string name="Women">Femenino</string>
+    <string name="leer">leer</string>
+    <string name="ver_tv">Ver TV</string>
+    <string name="bailar">Bailar</string>
+    <string name="cantar">cantar</string>
+    <string name="nadar">Nadar</string>
+    <string name="informaci_n">Información</string>
+    <string name="Educacion">Educación</string>
+    <string name="stars">Estrellas</string>
+    <string name="cambiar">cambiar</string>
+    <string-array name="grados">
+        <item>Primaria</item>
+        <item>Secundaria</item>
+        <item>Universiad</item>
+        <item>Otro</item>
+    </string-array>
+</resources>
