@@ -33,4 +33,9 @@
         <item>Universiad</item>
         <item>Otro</item>
     </string-array>
+
+    <string name="error_campo_obligatorio">Campo obligatorio</string>
+    <string name="error_campo_numerico">Campo numerico</string>
+    <string name="error_campo_alfabetico">Campo alfabetico</string>
+    <string name="error_sinta">Dirección de correo no valida</string>
 </resources>

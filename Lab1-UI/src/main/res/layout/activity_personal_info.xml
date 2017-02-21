@@ -63,7 +63,7 @@
                 android:id="@+id/etNombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapSentences|textNoSuggestions"
+                android:inputType="textCapWords|textNoSuggestions"
                 android:nextFocusDown="@+id/etApellidos"
                 android:theme="@style/AppTheme.EditText"/>
 
@@ -99,7 +99,7 @@
                 android:id="@+id/etApellidos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapSentences|textNoSuggestions"
+                android:inputType="textCapWords|textNoSuggestions"
                 android:theme="@style/AppTheme.EditText"/>
 
         </android.support.design.widget.TextInputLayout>
