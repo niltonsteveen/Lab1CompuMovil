@@ -27,6 +27,18 @@ public class OtherInfo extends AppCompatActivity {
     String[] other = new String[5];
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("cadena",cadena);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        cadena = savedInstanceState.getString("cadena");
+        tvDatos.setText(String.valueOf(cadena));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_info);
