@@ -26,12 +26,16 @@
     <string name="informaci_n">Information</string>
     <string name="stars">Stars</string>
     <string name="cambiar">Change</string>
-
-
     <string-array name="grados">
         <item>Primary</item>
         <item>High school</item>
         <item>College</item>
         <item>Other</item>
     </string-array>
+    <string name="error_campo_obligatorio">Input required</string>
+    <string name="error_campo_numerico">Number input</string>
+    <string name="error_campo_alfabetico">Alphabetical input</string>
+    <string name="error_sinta">Invalid email address</string>
+    <string name="selected_sexo">You must select one gender</string>
+
 </resources>

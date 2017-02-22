@@ -113,7 +113,7 @@ public class PersonalInfo extends AppCompatActivity implements DatePickerDialog.
         }
 
         if(!entro){
-            Toast.makeText(getApplicationContext(),"Debe seleccionar un sexo",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.selected_sexo,Toast.LENGTH_LONG).show();
             validado = false;
         }
         return validado;

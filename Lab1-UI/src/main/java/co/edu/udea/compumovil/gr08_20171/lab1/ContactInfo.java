@@ -152,7 +152,7 @@ public class ContactInfo extends AppCompatActivity {
 
     public static boolean checkAlpha(String str) {
         boolean respuesta = false;
-        if ((str).matches("([a-z]|[A-Z]|\\s)+")) {
+        if ((str).matches("([á-ú]|[a-z]|[A-Z]|\\s)+")) {
             respuesta = true;
         }
         return respuesta;

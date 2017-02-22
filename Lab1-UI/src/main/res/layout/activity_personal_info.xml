@@ -139,7 +139,7 @@
                 android:text="@string/sex"
                 android:gravity="bottom"
                 android:paddingBottom="10dp"
-                android:paddingRight="30dp"
+
                 android:textSize="@dimen/size_text"/>
         </android.support.design.widget.TextInputLayout>
         <RadioGroup
