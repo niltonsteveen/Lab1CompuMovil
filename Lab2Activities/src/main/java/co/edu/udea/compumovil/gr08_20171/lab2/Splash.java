@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Window;
 import android.widget.ProgressBar;
 
 public class Splash extends AppCompatActivity {
@@ -19,7 +20,7 @@ public class Splash extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         barProgreso=(ProgressBar)findViewById(R.id.progressBar);
         barProgreso.setMax(maxProgress());
-        barProgreso.setProgressTintList(ColorStateList.valueOf(Color.CYAN));
+        barProgreso.setProgressTintList(ColorStateList.valueOf(Color.rgb(69,198,255)));
         beginAnimation();
     }
 
