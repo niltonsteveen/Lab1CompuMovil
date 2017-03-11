@@ -4,4 +4,23 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="floating_label">13sp</dimen>
     <dimen name="error">13sp</dimen>
+
+    <!-- Dimens typography-->
+    <dimen name="subheader">14sp</dimen>
+    <dimen name="listItem">14sp</dimen>
+    <dimen name="nameSizeTyp">14sp</dimen>
+    <dimen name="restingElevation">16dp</dimen>
+
+    <!-- Dimens keylines and margins-->
+    <dimen name="margintLeftAndRightIcon">16dp</dimen>
+    <dimen name="iconvsContent">72dp</dimen>
+    <dimen name="perfil_image_size">64dp</dimen>
+
+    <!-- vertical spacing-->
+    <dimen name="statusBar">24dp</dimen>
+    <dimen name="subtittle">56dp</dimen>
+    <dimen name="spaceAreas">8dp</dimen>
+    <dimen name="subtittlesvsList">48dp</dimen>
+
+
 </resources>

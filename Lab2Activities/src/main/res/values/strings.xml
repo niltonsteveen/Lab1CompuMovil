@@ -1,3 +1,34 @@
 <resources>
     <string name="app_name">"Lab2Activities "</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="Correo">Correo Electrónico</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="usuario">Nombre de Usuario</string>
+    <string name="names">Nombre completo</string>
+    <string name="phone">Teléfono de contacto</string>
+    <string name="pais">País</string>
+    <string name="etDpto">Departamento</string>
+    <string name="etcity">Ciudad</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="hello_round">Hello Round World!</string>
+    <string name="hello_square">Hello Square World!</string>
+    <string name="Eventos">Eventos</string>
+    <string name="perfil">Perfil</string>
+    <string name="configuracion">Configuraciones</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="info">Acerca de</string>
+    <string name="Config">Configuración</string>
 </resources>
