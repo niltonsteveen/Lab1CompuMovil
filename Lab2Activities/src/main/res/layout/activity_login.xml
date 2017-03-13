@@ -54,14 +54,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/etUser"
+                    <EditText
+                        android:id="@+id/etPassLo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/Correo"
-                        android:inputType="textEmailAddress"
-                        android:maxLines="1" />
-
+                        android:hint="@string/user"
+                        android:imeActionId="@+id/login"
+                        android:imeActionLabel="@string/login"
+                        android:imeOptions="actionUnspecified"
+                        android:inputType="textPassword"
+                        android:maxLines="1"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
             <LinearLayout
