@@ -98,6 +98,13 @@
 
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="recordar"
+                android:id="@+id/rbRecordar"
+                android:textSize="20dp"
+                android:allowUndo="false" />
             <LinearLayout
                 android:id="@+id/bottom_bar"
                 android:layout_width="match_parent"
