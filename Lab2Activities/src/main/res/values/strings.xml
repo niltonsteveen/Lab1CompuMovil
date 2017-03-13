@@ -7,10 +7,10 @@
     <string name="password">Contraseña</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="login">Iniciar Sesión</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_invalid_email">El correo ingresado es inválido</string>
+    <string name="error_invalid_password">La contraseña no puede ser vacía</string>
     <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="error_field_required">Este campo es obligatorio</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
