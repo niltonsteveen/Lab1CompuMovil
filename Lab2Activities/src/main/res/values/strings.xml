@@ -30,4 +30,6 @@
     <string name="info">Acerca de</string>
     <string name="Config">Configuración</string>
     <string name="user">Nombre de usuario</string>
+    <string name="etDirection">Dirección</string>
+    <string name="etAge">Edad</string>
 </resources>
