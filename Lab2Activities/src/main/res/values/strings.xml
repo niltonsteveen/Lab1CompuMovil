@@ -31,4 +31,5 @@
     <string name="logout">Cerrar sesión</string>
     <string name="info">Acerca de</string>
     <string name="Config">Configuración</string>
+    <string name="user">Nombre de usuario</string>
 </resources>
