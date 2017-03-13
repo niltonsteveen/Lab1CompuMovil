@@ -41,6 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <EditText
+                        android:id="@+id/etUsuarioReg"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/usuario"
@@ -68,12 +69,14 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/names"
                         android:inputType="text|textNoSuggestions|"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:id="@+id/etNombreReg" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -102,7 +105,8 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_email"
                         android:inputType="textPassword"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:id="@+id/etEmailReg"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
             <LinearLayout
@@ -130,7 +134,8 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/password"
                         android:inputType="text|textNoSuggestions|"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:id="@+id/etContrasenaReg"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
             <LinearLayout
@@ -158,7 +163,8 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/phone"
                         android:inputType="text|textNoSuggestions|"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:id="@+id/etCelularReg"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
             <LinearLayout
@@ -186,7 +192,8 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/pais"
                         android:inputType="text|textNoSuggestions|"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:id="@+id/etPaisReg"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
             <LinearLayout
@@ -210,6 +217,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <EditText
+                        android:id="@+id/etDepartamentoReg"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/etDpto"
@@ -238,6 +246,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <EditText
+                        android:id="@+id/etCiudadReg"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/etcity"
@@ -268,9 +277,10 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/etcity"
+                        android:hint="Dirección"
                         android:inputType="text|textNoSuggestions|"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:id="@+id/etDireccionReg"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -297,39 +307,47 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/etcity"
+                        android:hint="Edad"
                         android:inputType="text|textNoSuggestions|"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:id="@+id/etEdadReg"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/img_usuarioReg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:paddingRight="16dp"
+                    android:src="@mipmap/ic_launcher" />
+
+                <Button
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/accent"
+                    android:textColor="@color/letter"
+                    android:text="Cambiar foto"
+                    android:id="@+id/btnCambiarFotoReg"/>
+
+            </LinearLayout>
+
+            <Button
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:descendantFocusability="beforeDescendants"
-                android:focusableInTouchMode="true"
-                android:orientation="horizontal"
-                >
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/direction"
-                    android:paddingRight="16dp"
-                    android:layout_gravity="bottom"
-                    />
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/etcity"
-                        android:inputType="text|textNoSuggestions|"
-                        android:maxLines="1"/>
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/accent"
+                android:textColor="@color/letter"
+                android:text="Guardar"
+                android:id="@+id/btnGuardarCuenta"/>
+
         </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
