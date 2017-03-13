@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="co.edu.udea.compumovil.gr08_20171.lab2.Register"
     android:orientation="vertical">
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        android:layout_height="wrap_content">
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginTop="70dp"
                 android:descendantFocusability="beforeDescendants"
                 android:focusableInTouchMode="true"
                 android:orientation="horizontal"
@@ -62,7 +62,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/names"
+                    android:src="@drawable/lock"
                     android:paddingRight="16dp"
                     android:layout_gravity="bottom"
                     />
@@ -73,10 +73,40 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/names"
-                        android:inputType="text|textNoSuggestions|"
+                        android:hint="@string/password"
+                        android:inputType="textPassword"
                         android:maxLines="1"
-                        android:id="@+id/etNombreReg" />
+                        android:id="@+id/etContrasenaReg" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/names"
+                    android:paddingRight="16dp"
+                    android:layout_gravity="bottom"
+                    />
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/names"
+                        android:inputType="text|textNoSuggestions"
+                        android:maxLines="1"
+                        android:id="@+id/etNombreReg"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -104,40 +134,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_email"
-                        android:inputType="textPassword"
+                        android:inputType="textEmailAddress"
                         android:maxLines="1"
                         android:id="@+id/etEmailReg"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:descendantFocusability="beforeDescendants"
-                android:focusableInTouchMode="true"
-                android:orientation="horizontal"
-                >
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/lock"
-                    android:paddingRight="16dp"
-                    android:layout_gravity="bottom"
-                    />
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/password"
-                        android:inputType="text|textNoSuggestions|"
-                        android:maxLines="1"
-                        android:id="@+id/etContrasenaReg"/>
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -158,15 +160,17 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/phone"
-                        android:inputType="text|textNoSuggestions|"
+                        android:inputType="text|phone"
                         android:maxLines="1"
                         android:id="@+id/etCelularReg"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -191,11 +195,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/pais"
-                        android:inputType="text|textNoSuggestions|"
+                        android:inputType="text|textNoSuggestions"
                         android:maxLines="1"
                         android:id="@+id/etPaisReg"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -221,7 +226,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/etDpto"
-                        android:inputType="text|textNoSuggestions|"
+                        android:inputType="text|textNoSuggestions"
                         android:maxLines="1"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
@@ -278,9 +283,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Dirección"
-                        android:inputType="text|textNoSuggestions|"
+                        android:inputType="text|textNoSuggestions"
                         android:maxLines="1"
                         android:id="@+id/etDireccionReg"/>
+
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -304,11 +310,12 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Edad"
-                        android:inputType="text|textNoSuggestions|"
+                        android:inputType="phone"
                         android:maxLines="1"
                         android:id="@+id/etEdadReg"/>
                 </android.support.design.widget.TextInputLayout>
@@ -362,7 +369,6 @@
                 ></android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
     </android.support.design.widget.CoordinatorLayout>
-    
 
 
 </LinearLayout>
