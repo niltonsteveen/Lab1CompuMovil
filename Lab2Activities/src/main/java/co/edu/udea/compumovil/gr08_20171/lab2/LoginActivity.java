@@ -1,5 +1,6 @@
 package co.edu.udea.compumovil.gr08_20171.lab2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -21,9 +22,10 @@ import android.widget.Toast;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static co.edu.udea.compumovil.gr08_20171.lab2.R.string.perfil;
+
 public class LoginActivity extends AppCompatActivity {
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
+
     private Button btnRegistro,btnEntrar;
     RadioButton rbRecordar;
     boolean recor = false;
@@ -34,6 +36,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        final Context context = this;
+        SharedPreferences sharprefs = getSharedPreferences("ArchivoSP",context.MODE_PRIVATE);
         // Set up the login form.
         btnRegistro=(Button)findViewById(R.id.btnRegistrarse);
         etUsuario = (EditText)findViewById(R.id.etUserLo);
@@ -41,14 +46,6 @@ public class LoginActivity extends AppCompatActivity {
         btnEntrar = (Button)findViewById(R.id.btnLogin);
         rbRecordar = (RadioButton)findViewById(R.id.rbRecordar);
         controlBD1 = new controladorBD1(getApplicationContext());
-
-        Button mEmailSignInButton = (Button) findViewById(R.id.btnLogin);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
 
         btnRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
         btnEntrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                attemptLogin();
                 SQLiteDatabase db = controlBD1.getReadableDatabase();
                 String[] projection = {
                         controladorBD1.DatosTablaUser.COLUMN_EMAIL
@@ -104,16 +102,13 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString("MiDato", etUsuario.getText().toString());
                         editor.commit();
                     }
-                    Intent verPerfil = new Intent(Login.this,perfil.class);
+                    Intent verPerfil = new Intent(LoginActivity.this,MainActivity.class);
                     verPerfil.putExtra("user",c.getString(0));
                     startActivity(verPerfil);
                 }
             }
         });
     }
-
-
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -123,30 +118,30 @@ public class LoginActivity extends AppCompatActivity {
     private void attemptLogin() {
 
         // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+        etUsuario.setError(null);
+        etContrasena.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String email = etUsuario.getText().toString();
+        String password = etContrasena.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+            etContrasena.setError(getString(R.string.error_invalid_password));
+            focusView = etContrasena;
             cancel = true;
         }
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+            etUsuario.setError(getString(R.string.error_field_required));
+            focusView = etUsuario;
             cancel = true;
         } else if (!validateEmail(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+            etUsuario.setError(getString(R.string.error_invalid_email));
+            focusView = etUsuario;
             cancel = true;
         }
 
