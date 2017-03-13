@@ -58,11 +58,8 @@
                         android:id="@+id/etUserLo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/user"
-                        android:imeActionId="@+id/login"
-                        android:imeActionLabel="@string/login"
-                        android:imeOptions="actionUnspecified"
-                        android:inputType="textPassword"
+                        android:hint="@string/usuario"
+                        android:inputType="textNoSuggestions"
                         android:maxLines="1"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>

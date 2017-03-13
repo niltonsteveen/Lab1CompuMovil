@@ -129,7 +129,7 @@ public class LoginActivity extends AppCompatActivity {
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(password)) {
             etContrasena.setError(getString(R.string.error_invalid_password));
             focusView = etContrasena;
             cancel = true;
@@ -139,10 +139,6 @@ public class LoginActivity extends AppCompatActivity {
             etUsuario.setError(getString(R.string.error_field_required));
             focusView = etUsuario;
             cancel = true;
-        } else if (!validateEmail(email)) {
-            etUsuario.setError(getString(R.string.error_invalid_email));
-            focusView = etUsuario;
-            cancel = true;
         }
 
         if (cancel) {
@@ -150,17 +146,6 @@ public class LoginActivity extends AppCompatActivity {
             // form field with an error.
             focusView.requestFocus();
         }
-    }
-
-    private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-
-    public static boolean validateEmail(String email) {
-        // Compiles the given regular expression into a pattern.
-        Pattern pattern = Pattern.compile(PATTERN_EMAIL);
-        // Match the given input against this pattern
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
     }
 }
 

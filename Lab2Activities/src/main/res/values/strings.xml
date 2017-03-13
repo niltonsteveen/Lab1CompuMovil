@@ -23,8 +23,6 @@
     <string name="etDpto">Departamento</string>
     <string name="etcity">Ciudad</string>
     <string name="title_activity_navigation">NavigationActivity</string>
-    <string name="hello_round">Hello Round World!</string>
-    <string name="hello_square">Hello Square World!</string>
     <string name="Eventos">Eventos</string>
     <string name="perfil">Perfil</string>
     <string name="configuracion">Configuraciones</string>
