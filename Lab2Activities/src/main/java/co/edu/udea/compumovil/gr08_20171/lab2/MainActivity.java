@@ -1,7 +1,7 @@
 package co.edu.udea.compumovil.gr08_20171.lab2;
 
-
-import android.app.FragmentTransaction;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -10,14 +10,20 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private String drawerTitle;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 // Marcar item presionado
                 menuItem.setChecked(true);
                 // Crear nuevo fragmento
+
                 String title = menuItem.getTitle().toString();
                 selectItem(title);
                 return true;
@@ -55,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         // Enviar título como arguemento del fragmento
         Bundle args = new Bundle();
         args.putString(PlaceholderFragment.ARG_SECTION_TITLE, title);
-
         Fragment fragment = PlaceholderFragment.newInstance(title);
         fragment.setArguments(args);
         FragmentManager fragmentManager = getSupportFragmentManager();

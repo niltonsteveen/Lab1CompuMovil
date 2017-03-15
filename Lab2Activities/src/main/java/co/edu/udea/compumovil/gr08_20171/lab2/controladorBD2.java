@@ -1,9 +1,12 @@
 package co.edu.udea.compumovil.gr08_20171.lab2;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+
+import java.util.List;
 
 /**
  * Created by Jesus Gomez on 13/03/2017.
@@ -12,6 +15,7 @@ import android.provider.BaseColumns;
 public class controladorBD2 extends SQLiteOpenHelper {
 
     public static class DatosTablaEvent implements BaseColumns {
+
         public static final String NOMBRE_TABLA = "Eventos";
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_NOMBRE = "nombre";
@@ -28,7 +32,7 @@ public class controladorBD2 extends SQLiteOpenHelper {
         private static final String TEXT_TYPE = " TEXT";
         private static final String BLOB_TYPE = " BLOB";
         private static final String COMMA_SEP = ",";
-        private static final String CREAR_TABLA_USER =
+        private static final String CREAR_TABLA_EVENT =
                 "CREATE TABLE " + DatosTablaEvent.NOMBRE_TABLA + " (" +
                         DatosTablaEvent.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                         DatosTablaEvent.COLUMN_NOMBRE + TEXT_TYPE + COMMA_SEP +
@@ -44,6 +48,8 @@ public class controladorBD2 extends SQLiteOpenHelper {
 
         private static final String SQL_DELETE_ENTRIES =
                 "DROP TABLE IF EXISTS " + DatosTablaEvent.NOMBRE_TABLA;
+
+
     }
 
     public static final int DATABASE_VERSION = 1;
@@ -55,7 +61,7 @@ public class controladorBD2 extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        db.execSQL(controladorBD2.DatosTablaEvent.CREAR_TABLA_EVENT);
     }
 
     @Override
