@@ -62,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
         // Enviar título como arguemento del fragmento
         Bundle args = new Bundle();
         args.putString(PlaceholderFragment.ARG_SECTION_TITLE, title);
-        Fragment fragment = PlaceholderFragment.newInstance(title);
+        PlaceholderFragment fragment = PlaceholderFragment.newInstance(title);
+        fragment.setMainActivity(this);
         fragment.setArguments(args);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager
