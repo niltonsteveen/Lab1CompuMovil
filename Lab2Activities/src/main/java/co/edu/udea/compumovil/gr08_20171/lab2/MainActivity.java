@@ -22,18 +22,27 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private String drawerTitle;
-
-
+    private Bundle bundle;
+    private String usuarioEmail;
+    private String usuario, clave, nombre, celular, pais, departamento, ciudad, direccion, edad;
+    private byte[] foto;
+    controladorBD1 controlBD1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setToolbar(); // Setear Toolbar como action bar
-
+        bundle = getIntent().getExtras();
+        usuarioEmail = bundle.getString("user").toString();
+        consultarUser();
+        bundle = getIntent().getExtras();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
         if (navigationView != null) {
+
             setupDrawerContent(navigationView);
+
         }
 
         drawerTitle = getResources().getString(R.string.Eventos);
@@ -63,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         Bundle args = new Bundle();
         args.putString(PlaceholderFragment.ARG_SECTION_TITLE, title);
         PlaceholderFragment fragment = PlaceholderFragment.newInstance(title);
-        fragment.setMainActivity(this);
+        fragment.setMainActivity(this,nombre,usuarioEmail,celular,pais,departamento,ciudad,direccion,edad,foto);
         fragment.setArguments(args);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager
@@ -84,6 +93,47 @@ public class MainActivity extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
+    }
+
+    private void consultarUser()
+    {
+        controlBD1=new controladorBD1(getApplicationContext());
+        SQLiteDatabase db = controlBD1.getReadableDatabase();
+        String[] arqsel = {usuarioEmail};
+        String[] projection = {
+                controladorBD1.DatosTablaUser.COLUMN_USUARIO,
+                controladorBD1.DatosTablaUser.COLUMN_CONTRASENA,
+                controladorBD1.DatosTablaUser.COLUMN_NOMBRE,
+                controladorBD1.DatosTablaUser.COLUMN_EMAIL,
+                controladorBD1.DatosTablaUser.COLUMN_CELULAR,
+                controladorBD1.DatosTablaUser.COLUMN_PAIS,
+                controladorBD1.DatosTablaUser.COLUMN_DEPARTAMENTO,
+                controladorBD1.DatosTablaUser.COLUMN_CIUDAD,
+                controladorBD1.DatosTablaUser.COLUMN_DIRECCION,
+                controladorBD1.DatosTablaUser.COLUMN_EDAD,
+                controladorBD1.DatosTablaUser.COLUMN_FOTO
+        };
+        Cursor c = db.query(
+                controladorBD1.DatosTablaUser.NOMBRE_TABLA,
+                projection,
+                controladorBD1.DatosTablaUser.COLUMN_EMAIL+"=?",
+                arqsel,         // The values for the WHERE clause
+                null,           // don't group the rows
+                null,           // don't filter by row groups
+                null            // The sort order
+        );
+
+        c.moveToFirst();
+        usuario = c.getString(0);
+        clave = c.getString(1);
+        nombre = c.getString(2);
+        celular = c.getString(4);
+        pais = c.getString(5);
+        departamento = c.getString(6);
+        ciudad = c.getString(7);
+        direccion = c.getString(8);
+        edad = c.getString(9);
+        foto = c.getBlob(10);
     }
 
     @Override

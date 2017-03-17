@@ -117,8 +117,12 @@ public class LoginActivity extends AppCompatActivity {
                             editor.commit();
                         }
                         Intent verPerfil = new Intent(LoginActivity.this,MainActivity.class);
+
+                        System.out.println(c.getString(0));
                         verPerfil.putExtra("user",c.getString(0));
                         startActivity(verPerfil);
+
+
                     }
                 }
             });
