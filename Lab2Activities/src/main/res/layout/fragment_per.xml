@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="layout.PerfilFragment">
+    tools:context="co.edu.udea.compumovil.gr08_20171.lab2.MainActivity">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -26,7 +26,7 @@
                 android:src="@drawable/perfil1"
                 app:border_color="@android:color/white"
                 app:border_width="1dp"
-            />
+                />
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"

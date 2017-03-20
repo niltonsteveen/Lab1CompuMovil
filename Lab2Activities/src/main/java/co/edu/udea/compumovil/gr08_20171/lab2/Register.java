@@ -79,6 +79,7 @@ public class Register extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Se guardo el registro"+emailGuardado, Toast.LENGTH_LONG).show();
 
                 Intent verPerfil = new Intent(Register.this,LoginActivity.class);
+                verPerfil.putExtra("sali","");
                 startActivity(verPerfil);
             }
         });

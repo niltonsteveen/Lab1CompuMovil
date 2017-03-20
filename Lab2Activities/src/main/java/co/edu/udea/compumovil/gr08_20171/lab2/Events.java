@@ -1,8 +1,5 @@
 package co.edu.udea.compumovil.gr08_20171.lab2;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 /**
  * Created by nilto on 14/03/2017.
  */
@@ -13,18 +10,18 @@ public class Events {
     private String nombre;
     private String fecha;
     private String información;
-    private String tipo;
+    private String organizador;
     private String pais;
     private String departamento;
     private String ciudad;
-    private String direccion;
+    private String lugar;
     private String puntuacion;
     private byte[] foto;
 
     public Events(String ciudad, String departamento, String direccion, String fecha, byte[] foto, String id, String información, String nombre, String pais, String puntuacion, String tipo) {
         this.ciudad = ciudad;
         this.departamento = departamento;
-        this.direccion = direccion;
+        this.lugar = direccion;
         this.fecha = fecha;
         this.foto = foto;
         this.id = id;
@@ -32,7 +29,7 @@ public class Events {
         this.nombre = nombre;
         this.pais = pais;
         this.puntuacion = puntuacion;
-        this.tipo = tipo;
+        this.organizador = tipo;
     }
 
     public Events() {
@@ -54,12 +51,12 @@ public class Events {
         this.departamento = departamento;
     }
 
-    public String getDireccion() {
-        return direccion;
+    public String getLugar() {
+        return lugar;
     }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
     }
 
     public String getFecha() {
@@ -118,12 +115,12 @@ public class Events {
         this.puntuacion = puntuacion;
     }
 
-    public String getTipo() {
-        return tipo;
+    public String getOrganizador() {
+        return organizador;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setOrganizador(String organizador) {
+        this.organizador = organizador;
     }
 
 

@@ -52,14 +52,13 @@ public class controladorBD1 extends SQLiteOpenHelper{
         public static final String COLUMN_NOMBRE = "nombre";
         public static final String COLUMN_FECHA = "fecha";
         public static final String COLUMN_INFORMACION = "informacion";
-        public static final String COLUMN_TIPO = "tipo";
+        public static final String COLUMN_ORGANIZADOR = "organizador";
         public static final String COLUMN_PAIS = "pais";
         public static final String COLUMN_DEPARTAMENTO = "departamento";
         public static final String COLUMN_CIUDAD = "ciudad";
-        public static final String COLUMN_DIRECCION = "direccion";
+        public static final String COLUMN_LUGAR = "lugar";
         public static final String COLUMN_PUNTUACION = "puntuacion";
         public static final String COLUMN_FOTO = "foto";
-
         private static final String TEXT_TYPE = " TEXT";
         private static final String BLOB_TYPE = " BLOB";
         private static final String COMMA_SEP = ",";
@@ -69,11 +68,11 @@ public class controladorBD1 extends SQLiteOpenHelper{
                         DatosTablaEvent.COLUMN_NOMBRE + TEXT_TYPE + COMMA_SEP +
                         DatosTablaEvent.COLUMN_FECHA + TEXT_TYPE + COMMA_SEP +
                         DatosTablaEvent.COLUMN_INFORMACION + TEXT_TYPE + COMMA_SEP +
-                        DatosTablaEvent.COLUMN_TIPO + TEXT_TYPE + COMMA_SEP +
+                        DatosTablaEvent.COLUMN_ORGANIZADOR + TEXT_TYPE + COMMA_SEP +
                         DatosTablaEvent.COLUMN_PAIS + TEXT_TYPE + COMMA_SEP +
                         DatosTablaEvent.COLUMN_DEPARTAMENTO + TEXT_TYPE + COMMA_SEP +
                         DatosTablaEvent.COLUMN_CIUDAD + TEXT_TYPE + COMMA_SEP +
-                        DatosTablaEvent.COLUMN_DIRECCION + TEXT_TYPE + COMMA_SEP +
+                        DatosTablaEvent.COLUMN_LUGAR + TEXT_TYPE + COMMA_SEP +
                         DatosTablaEvent.COLUMN_PUNTUACION + TEXT_TYPE + COMMA_SEP +
                         DatosTablaEvent.COLUMN_FOTO + BLOB_TYPE + " )";
 

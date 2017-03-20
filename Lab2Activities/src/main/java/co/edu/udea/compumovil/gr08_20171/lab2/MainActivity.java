@@ -3,46 +3,57 @@ package co.edu.udea.compumovil.gr08_20171.lab2;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private RecyclerView rv;
+    private LinearLayoutManager llm;
     private DrawerLayout drawerLayout;
     private String drawerTitle;
     private Bundle bundle;
     private String usuarioEmail;
     private String usuario, clave, nombre, celular, pais, departamento, ciudad, direccion, edad;
+    private TextView tvNomP;
     private byte[] foto;
     controladorBD1 controlBD1;
+    List<Events> listaEventos;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        controlBD1=new controladorBD1(getApplicationContext());
         setToolbar(); // Setear Toolbar como action bar
+
         bundle = getIntent().getExtras();
         usuarioEmail = bundle.getString("user").toString();
-        consultarUser();
         bundle = getIntent().getExtras();
+        consultarUser();
+
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
         if (navigationView != null) {
-
             setupDrawerContent(navigationView);
-
         }
 
         drawerTitle = getResources().getString(R.string.Eventos);
@@ -68,18 +79,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void selectItem(String title) {
-        // Enviar título como arguemento del fragmento
-        Bundle args = new Bundle();
-        args.putString(PlaceholderFragment.ARG_SECTION_TITLE, title);
-        PlaceholderFragment fragment = PlaceholderFragment.newInstance(title);
-        fragment.setMainActivity(this,nombre,usuarioEmail,celular,pais,departamento,ciudad,direccion,edad,foto);
-        fragment.setArguments(args);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager
-                .beginTransaction()
-                .replace(R.id.main_content, fragment)
-                .commit();
-        drawerLayout.closeDrawers(); // Cerrar drawer
+
+        Fragment fragment = null;
+        switch(title) {
+            case "Configuraciones":
+                getFragmentManager().beginTransaction().replace(R.id.main_content, fragmentPreferenceConfi.newInstance()).commit();
+                break;
+            case "Eventos":
+                consultarEvents();
+                eventos even = new eventos();
+                even.setLista(listaEventos);
+                fragment = even;
+                getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
+                break;
+            case "Perfil":
+                per frag = new per();
+                frag.setPerfil(nombre,usuarioEmail,celular,pais,departamento,ciudad,direccion,edad,foto);
+                fragment = frag;
+                getFragmentManager().beginTransaction().replace(R.id.main_content,fragment).commit();
+                break;
+
+        }
         setTitle(title); // Setear título actual
     }
 
@@ -95,9 +115,58 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void consultarEvents() {
+        SQLiteDatabase db = controlBD1.getWritableDatabase();
+        Cursor cursor=db.rawQuery("SELECT * FROM "+ controladorBD1.DatosTablaEvent.NOMBRE_TABLA,null);
+        Events evt= new Events();
+        evt.setNombre("oli");
+        evt.setFecha("oli");
+        evt.setInformación("oli");
+        evt.setOrganizador("oli");
+        evt.setPais("oli");
+        evt.setDepartamento("oli");
+        evt.setCiudad("oli");
+        evt.setLugar("oli");
+        evt.setPuntuacion("oli");
+        evt.setFoto(foto);
+        listaEventos = new ArrayList<Events>();
+        listaEventos.add(evt);
+        while (cursor.moveToNext()) {
+
+                String nombre = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE));
+                String fecha = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_FECHA));
+                String informacion = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_INFORMACION));
+                String organizador = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_ORGANIZADOR));
+                String pais = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_PAIS));
+                String departamento = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_DEPARTAMENTO));
+                String ciudad = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_CIUDAD));
+                String lugar = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_LUGAR));
+                String puntuacion = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_PUNTUACION));
+                byte[] foto = cursor.getBlob(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_FOTO));
+
+                evt.setNombre(nombre);
+                evt.setFecha(fecha);
+                evt.setInformación(informacion);
+                evt.setOrganizador(organizador);
+                evt.setPais(pais);
+                evt.setDepartamento(departamento);
+                evt.setCiudad(ciudad);
+                evt.setLugar(lugar);
+                evt.setPuntuacion(puntuacion);
+                evt.setFoto(foto);
+
+                listaEventos.add(evt);
+            }
+       /*
+            Fragment fragment = null;
+            crearEvento frag = new crearEvento();
+            fragment = frag;
+            getFragmentManager().beginTransaction().replace(R.id.main_content,fragment).commit();*/
+
+    }
+
     private void consultarUser()
     {
-        controlBD1=new controladorBD1(getApplicationContext());
         SQLiteDatabase db = controlBD1.getReadableDatabase();
         String[] arqsel = {usuarioEmail};
         String[] projection = {
@@ -124,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
         );
 
         c.moveToFirst();
+
         usuario = c.getString(0);
         clave = c.getString(1);
         nombre = c.getString(2);
@@ -154,4 +224,21 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public static class fragmentPreferenceConfi extends PreferenceFragment {
+        public static fragmentPreferenceConfi newInstance() {
+
+            Bundle args = new Bundle();
+
+            fragmentPreferenceConfi fragment = new fragmentPreferenceConfi();
+            fragment.setArguments(args);
+            return fragment;
+        }
+        @Override
+        public void onCreate(Bundle savedInstanceState){
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.f_configuracion);
+        }
+    }
+
 }
