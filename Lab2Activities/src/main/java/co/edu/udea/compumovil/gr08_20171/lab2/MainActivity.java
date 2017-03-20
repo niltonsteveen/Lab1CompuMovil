@@ -1,5 +1,6 @@
 package co.edu.udea.compumovil.gr08_20171.lab2;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -97,6 +98,12 @@ public class MainActivity extends AppCompatActivity {
                 frag.setPerfil(nombre,usuarioEmail,celular,pais,departamento,ciudad,direccion,edad,foto);
                 fragment = frag;
                 getFragmentManager().beginTransaction().replace(R.id.main_content,fragment).commit();
+                break;
+            case "Cerrar sesión":
+                Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+                intent.putExtra("sali","cerrar");
+                startActivity(intent);
+                finish();
                 break;
 
         }
