@@ -27,6 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class CreaEvent extends AppCompatActivity {
@@ -37,6 +38,7 @@ public class CreaEvent extends AppCompatActivity {
     Button btnGuardar, btnCambiarImg;
     Button cambiarFoto;
     Button btnMostrarFecha;
+    private int dia, mes, año;
     List<Events> listaEventos;
     final int REQUEST_CODE_GALLERY = 999;
 
@@ -57,6 +59,11 @@ public class CreaEvent extends AppCompatActivity {
         controlBD1 = new controladorBD1(getApplication());
 
         btnMostrarFecha =(Button)findViewById(R.id.btnFechaEvento);
+        final Calendar c = Calendar.getInstance();
+        año = c.get(Calendar.YEAR);
+        mes = c.get(Calendar.MONTH);
+        dia = c.get(Calendar.DAY_OF_MONTH);
+        mostrarFecha();
 
         cambiarFoto = (Button)findViewById(R.id.btnCambiarFotoEvem);
         btnGuardar = (Button)findViewById(R.id.btnGuardarEven);
@@ -105,6 +112,11 @@ public class CreaEvent extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    public void mostrarFecha(){
+        etFecha.setText(dia +"/"+(mes +1)+"/"+ año);
     }
 
     public void showDatePickerDialog(View v) {
