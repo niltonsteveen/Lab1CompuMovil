@@ -176,7 +176,7 @@
                         android:id="@+id/etCelularPerfil"
                         android:hint="Celular"
                         android:textSize="20dp"
-                        android:inputType="text|textNoSuggestions|"
+                        android:inputType="phone"
                         android:maxLines="1"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>

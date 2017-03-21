@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
                 break;
             case "Perfil":
+                consultarUser();
                 per frag = new per();
                 frag.setPerfil(usuario,clave,nombre,usuarioEmail,celular,pais,departamento,ciudad,direccion,edad,foto);
                 fragment = frag;

@@ -1,6 +1,7 @@
 package co.edu.udea.compumovil.gr08_20171.lab2;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.ContentValues;
@@ -19,6 +20,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -30,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class CreaEvent extends AppCompatActivity {
+public class CreaEvent extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
 
     EditText etNombre,etFecha,etInformacion,etOrganizador,etPais,etDepartamento,etCiudad,etLugar,etPuntuacion;
     ImageView imgEvento;
@@ -243,5 +245,13 @@ public class CreaEvent extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
         byte[] byteArray = stream.toByteArray();
         return byteArray;
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        año=year;
+        mes=month;
+        dia=dayOfMonth;
+        mostrarFecha();
     }
 }
