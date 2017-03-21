@@ -132,15 +132,9 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase db = controlBD1.getWritableDatabase();
         Cursor cursor=db.rawQuery("SELECT * FROM "+ controladorBD1.DatosTablaEvent.NOMBRE_TABLA,null);
         Events evt= new Events();
-        evt.setNombre("Nacional vs Medellín");
-        evt.setInformación("Partido correspondiente a la 1 fecha del fpc");
-        evt.setPuntuacion("5");
-        evt.setFoto(foto);
         listaEventos = new ArrayList<Events>();
-        listaEventos.add(evt);
         if(cursor.getCount()>0) {
             while (cursor.moveToNext()) {
-
                 String nombre = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE));
                 String fecha = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_FECHA));
                 String informacion = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_INFORMACION));
@@ -153,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
                 byte[] foto = cursor.getBlob(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_FOTO));
 
                 evt.setNombre(nombre);
-                evt.setInformación(informacion);
-                evt.setPuntuacion(puntuacion);
+                evt.setInformación("Descripción: "+informacion);
+                evt.setPuntuacion("Puntuación: "+puntuacion);
                 evt.setFoto(foto);
 
                 listaEventos.add(evt);

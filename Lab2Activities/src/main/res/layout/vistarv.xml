@@ -32,62 +32,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Small Text"
-            android:id="@+id/fechaEvent"
-            android:layout_below="@+id/nombreEvent"
-            android:layout_alignLeft="@+id/nombreEvent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
             android:id="@+id/informacionEvent"
-            android:layout_below="@+id/fechaEvent"
-            android:layout_alignLeft="@+id/nombreEvent"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/organizadorEvent"
-            android:layout_below="@+id/informacionEvent"
-            android:layout_alignLeft="@+id/nombreEvent"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/paisEvent"
-            android:layout_below="@+id/organizadorEvent"
-            android:layout_alignLeft="@+id/nombreEvent"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/departementoEvent"
-            android:layout_below="@+id/paisEvent"
-            android:layout_alignLeft="@+id/nombreEvent"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/ciudadEvent"
-            android:layout_below="@+id/departementoEvent"
-            android:layout_alignLeft="@+id/nombreEvent"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/lugarEvent"
-            android:layout_below="@+id/ciudadEvent"
+            android:layout_below="@+id/nombreEvent"
             android:layout_alignLeft="@+id/nombreEvent"/>
 
         <TextView
@@ -96,7 +42,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Small Text"
             android:id="@+id/puntuacionEvent"
-            android:layout_below="@+id/lugarEvent"
+            android:layout_below="@+id/informacionEvent"
             android:layout_alignLeft="@+id/nombreEvent"/>
 
     </RelativeLayout>

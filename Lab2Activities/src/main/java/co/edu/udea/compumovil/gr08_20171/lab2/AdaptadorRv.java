@@ -32,13 +32,8 @@ public class AdaptadorRv
             super(v);
             imagen = (ImageView) v.findViewById(R.id.imagenEvent);
             tvNombre = (TextView) v.findViewById(R.id.nombreEvent);
-            tvFecha = (TextView) v.findViewById(R.id.fechaEvent);
+
             tvInformacion = (TextView) v.findViewById(R.id.informacionEvent);
-            tvOrganizador = (TextView) v.findViewById(R.id.organizadorEvent);
-            tvPais = (TextView) v.findViewById(R.id.paisEvent);
-            tvDepartamento = (TextView) v.findViewById(R.id.departementoEvent);
-            tvCiudad = (TextView) v.findViewById(R.id.ciudadEvent);
-            tvLugar = (TextView) v.findViewById(R.id.lugarEvent);
             tvPuntuacion=(TextView) v.findViewById(R.id.puntuacionEvent);
         }
     }
@@ -64,13 +59,13 @@ public class AdaptadorRv
     public void onBindViewHolder(EventsViewHolder viewHolder, int i) {
         viewHolder.imagen.setImageBitmap(byteImgToBitmap(listaEvents.get(i).getFoto()));
         viewHolder.tvNombre.setText(listaEvents.get(i).getNombre());
-        viewHolder.tvFecha.setText(listaEvents.get(i).getFecha());
+       // viewHolder.tvFecha.setText(listaEvents.get(i).getFecha());
         viewHolder.tvInformacion.setText(listaEvents.get(i).getInformación());
-        viewHolder.tvOrganizador.setText(listaEvents.get(i).getOrganizador());
+       /* viewHolder.tvOrganizador.setText(listaEvents.get(i).getOrganizador());
         viewHolder.tvPais.setText(listaEvents.get(i).getPais());
         viewHolder.tvDepartamento.setText(listaEvents.get(i).getDepartamento());
         viewHolder.tvCiudad.setText(listaEvents.get(i).getCiudad());
-        viewHolder.tvLugar.setText(listaEvents.get(i).getLugar());
+        viewHolder.tvLugar.setText(listaEvents.get(i).getLugar());*/
         viewHolder.tvPuntuacion.setText(listaEvents.get(i).getPuntuacion());
     }
 
