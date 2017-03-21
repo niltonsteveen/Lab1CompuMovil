@@ -107,7 +107,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
                 break;
-
+            case "Acerca de":
+                AcerqueDe fragm = new AcerqueDe();
+                fragment = fragm;
+                getFragmentManager().beginTransaction().replace(R.id.main_content,fragment);
+                break;
         }
         setTitle(title); // Setear título actual
     }
