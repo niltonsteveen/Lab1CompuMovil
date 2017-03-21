@@ -1,12 +1,19 @@
 package co.edu.udea.compumovil.gr08_20171.lab2;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.List;
 
 
 /**
@@ -22,6 +29,20 @@ public class MostrarEven extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private List<Events> eventos;
+    private int selected;
+
+    ImageView imgEvt;
+    TextView tvNombreEvt;
+    TextView tvFecha;
+    TextView tvInfo;
+    TextView tvOrg;
+    TextView tvPuntuacion;
+    TextView tvPais;
+    TextView tvDepartamento;
+    TextView tvCiudad;
+    Button btnVerUbicacion;
+    String ubic="";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -31,6 +52,22 @@ public class MostrarEven extends Fragment {
 
     public MostrarEven() {
         // Required empty public constructor
+    }
+
+    public int getSelected() {
+        return selected;
+    }
+
+    public void setSelected(int selected) {
+        this.selected = selected;
+    }
+
+    public List<Events> getEventos() {
+        return eventos;
+    }
+
+    public void setEventos(List<Events> eventos) {
+        this.eventos = eventos;
     }
 
     /**
@@ -60,11 +97,61 @@ public class MostrarEven extends Fragment {
         }
     }
 
+    private Bitmap byteImgToBitmap(byte[] blob) {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(blob, 0, blob.length);
+        return bitmap;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_mostrar_even, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_mostrar_even, container, false);
+        imgEvt=(ImageView)view.findViewById(R.id.imgEvent);
+        imgEvt.setImageBitmap(byteImgToBitmap(this.getEventos().get(this.getSelected()).getFoto()));
+
+        tvNombreEvt=(TextView)view.findViewById(R.id.tvNombreEvent);
+        tvNombreEvt.setText(this.getEventos().get(this.getSelected()).getNombre());
+
+        tvFecha =(TextView)view.findViewById(R.id.tvFechaEvent);
+        tvFecha.setText(this.getEventos().get(this.getSelected()).getFecha());
+
+        tvInfo=(TextView)view.findViewById(R.id.tvInformacionEvent);
+        tvInfo.setText(this.getEventos().get(this.getSelected()).getInformación());
+
+        tvOrg=(TextView)view.findViewById(R.id.tvOrganizadorEvent);
+        tvOrg.setText(this.getEventos().get(this.getSelected()).getOrganizador());
+
+        tvPais=(TextView)view.findViewById(R.id.tvPais1);
+        tvPais.setText(this.getEventos().get(this.getSelected()).getPais());
+
+        tvDepartamento=(TextView)view.findViewById(R.id.tvDepartamento1);
+        tvDepartamento.setText(this.getEventos().get(this.getSelected()).getDepartamento());
+
+        tvPuntuacion=(TextView) view.findViewById(R.id.tvPuntuacionEvent);
+        tvPuntuacion.setText(this.getEventos().get(this.getSelected()).getPuntuacion());
+
+        tvCiudad=(TextView)view.findViewById(R.id.tvCiudad1);
+        tvCiudad.setText(this.getEventos().get(this.getSelected()).getCiudad());
+
+        btnVerUbicacion=(Button)view.findViewById(R.id.btnUbicacion);
+        ubic=(this.getEventos().get(this.getSelected()).getLugar());
+
+        ubic=this.getEventos().get(this.getSelected()).getPais()+";"+
+                this.getEventos().get(this.getSelected()).getDepartamento()+";"+
+                this.getEventos().get(this.getSelected()).getCiudad()+";"+
+                this.getEventos().get(this.getSelected()).getLugar();
+        String a []=ubic.split(";");
+
+        btnVerUbicacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }});
+
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

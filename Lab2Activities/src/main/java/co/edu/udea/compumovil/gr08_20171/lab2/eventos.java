@@ -93,9 +93,11 @@ public class eventos extends Fragment {
             public void onClick(View v) {
                 Fragment fragment = null;
                 MostrarEven frag = new MostrarEven();
+                frag.setEventos(listaEventos);
+                frag.setSelected(rv.getChildAdapterPosition(v));
                 fragment = frag;
                 getFragmentManager().beginTransaction().replace(R.id.main_content,fragment).commit();
-                Log.i("DemoRecView", "Pulsado el elemento " + rv.getChildPosition(v));
+                Log.i("DemoRecView", "Pulsado el elemento " + rv.getChildAdapterPosition(v));
             }
         });
 

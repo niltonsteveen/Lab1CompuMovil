@@ -113,7 +113,7 @@ public class crearEvento extends Fragment {
                 ContentValues valores = new ContentValues();
                 valores.put(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE, etNombre.getText().toString());
                 valores.put(controladorBD1.DatosTablaEvent.COLUMN_FECHA, etFecha.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE, etInformacion.getText().toString());
+                valores.put(controladorBD1.DatosTablaEvent.COLUMN_INFORMACION, etInformacion.getText().toString());
                 valores.put(controladorBD1.DatosTablaEvent.COLUMN_ORGANIZADOR, etOrganizador.getText().toString());
                 valores.put(controladorBD1.DatosTablaEvent.COLUMN_PAIS, etPais.getText().toString());
                 valores.put(controladorBD1.DatosTablaEvent.COLUMN_DEPARTAMENTO, etDepartamento.getText().toString());

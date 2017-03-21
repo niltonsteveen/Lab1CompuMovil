@@ -10,6 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/backImg2">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,10 +50,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
+                    android:textColor="@color/letter"
                     android:text="Nombre del evento:" />
                 <TextView
                     android:id="@+id/tvNombreEvent"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/letter"
                     android:layout_height="wrap_content" />
             </LinearLayout>
         </RelativeLayout>
@@ -63,10 +73,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
+                    android:textColor="@color/letter"
                     android:text="Fecha:" />
                 <TextView
                     android:id="@+id/tvFechaEvent"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/letter"
                     android:layout_height="wrap_content" />
             </LinearLayout>
         </RelativeLayout>
@@ -84,10 +96,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
+                    android:textColor="@color/letter"
                     android:text="Informacion:" />
                 <TextView
                     android:id="@+id/tvInformacionEvent"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/letter"
                     android:layout_height="wrap_content" />
             </LinearLayout>
         </RelativeLayout>
@@ -106,9 +120,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
+                    android:textColor="@color/letter"
                     android:text="Organizador:" />
                 <TextView
                     android:id="@+id/tvOrganizadorEvent"
+                    android:textColor="@color/letter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -124,13 +140,15 @@
                 android:orientation="horizontal"
                 android:layout_centerInParent="true">
                 <TextView
-                    android:id="@+id/tviewPaisEvent"
+                    android:id="@+id/tviewPais1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
+                    android:textColor="@color/letter"
                     android:text="Pais:" />
                 <TextView
-                    android:id="@+id/tvPaisEvent"
+                    android:id="@+id/tvPais1"
+                    android:textColor="@color/letter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -146,13 +164,15 @@
                 android:orientation="horizontal"
                 android:layout_centerInParent="true">
                 <TextView
-                    android:id="@+id/tviewDepartamentoEvent"
+                    android:id="@+id/tviewDepartamento1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
-                    android:text="Departemento:" />
+                    android:textColor="@color/letter"
+                    android:text="Departamento:" />
                 <TextView
-                    android:id="@+id/tvDepartementoEvent"
+                    android:id="@+id/tvDepartamento1"
+                    android:textColor="@color/letter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -168,13 +188,40 @@
                 android:orientation="horizontal"
                 android:layout_centerInParent="true">
                 <TextView
-                    android:id="@+id/tviewCiudadEvent"
+                    android:id="@+id/tviewCiudad1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
+                    android:textColor="@color/letter"
                     android:text="Ciudad:" />
                 <TextView
-                    android:id="@+id/tvCiudadEvent"
+                    android:id="@+id/tvCiudad1"
+                    android:textColor="@color/letter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerInParent="true">
+                <TextView
+                    android:id="@+id/tviewUbicacion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/letter"
+                    android:text="Pais:" />
+                <Button
+                    android:id="@+id/btnUbicacion"
+                    android:text="VER"
+                    android:textColor="@color/letter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -194,13 +241,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
+                    android:textColor="@color/letter"
                     android:text="Puntuación:" />
                 <TextView
                     android:id="@+id/tvPuntuacionEvent"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/letter"
                     android:layout_height="wrap_content" />
             </LinearLayout>
         </RelativeLayout>
-
+</LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
     </LinearLayout>
 </FrameLayout>
