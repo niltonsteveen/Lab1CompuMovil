@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private byte[] foto;
     controladorBD1 controlBD1;
     List<Events> listaEventos;
+    List<Events> listaEventos1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 consultarEvents();
                 eventos even = new eventos();
                 even.setLista(listaEventos);
+                even.setListaEventos1(listaEventos1);
                 fragment = even;
                 getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
                 break;
@@ -129,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         Cursor cursor=db.rawQuery("SELECT * FROM "+ controladorBD1.DatosTablaEvent.NOMBRE_TABLA,null);
         Events evt= new Events();
         listaEventos = new ArrayList<Events>();
+        listaEventos1 = new ArrayList<Events>();
         if(cursor.getCount()>0) {
             while (cursor.moveToNext()) {
                 String nombre = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE));
@@ -148,6 +151,19 @@ public class MainActivity extends AppCompatActivity {
                 evt.setFoto(foto);
 
                 listaEventos.add(evt);
+
+                evt.setNombre(nombre);
+                evt.setInformación(informacion);
+                evt.setPuntuacion(puntuacion);
+                evt.setFoto(foto);
+                evt.setFecha(fecha);
+                evt.setOrganizador(organizador);
+                evt.setPais(pais);
+                evt.setDepartamento(departamento);
+                evt.setCiudad(ciudad);
+                evt.setLugar(lugar);
+                listaEventos1.add(evt);
+
             }
         }
        /*

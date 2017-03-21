@@ -33,6 +33,7 @@ public class eventos extends Fragment {
 
     FloatingActionButton bf;
     List<Events> listaEventos;
+    List<Events> listaEventos1;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -43,7 +44,11 @@ public class eventos extends Fragment {
         // Required empty public constructor
     }
 
-    public void setLista( List<Events> listaEventos) {
+    public void setListaEventos1(List<Events> listaEventos1) {
+        this.listaEventos1 = listaEventos1;
+    }
+
+    public void setLista(List<Events> listaEventos) {
         this.listaEventos = listaEventos;
     }
     /**
@@ -93,7 +98,7 @@ public class eventos extends Fragment {
             public void onClick(View v) {
                 Fragment fragment = null;
                 MostrarEven frag = new MostrarEven();
-                frag.setEventos(listaEventos);
+                frag.setEventos(listaEventos1);
                 frag.setSelected(rv.getChildAdapterPosition(v));
                 fragment = frag;
                 getFragmentManager().beginTransaction().replace(R.id.main_content,fragment).commit();
