@@ -10,6 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/backImg2">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,7 +31,6 @@
                 android:layout_height="183dp"
                 android:layout_marginBottom="16dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/perfil1"
                 app:border_color="@android:color/white"
                 app:border_width="1dp"
                 />
@@ -42,10 +49,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
+                    android:textColor="@color/letter"
                     android:text="@string/usuario2" />
                 <TextView
                     android:id="@+id/tvNombrePerfil"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/letter"
                     android:layout_height="wrap_content" />
             </LinearLayout>
         </RelativeLayout>
@@ -63,10 +72,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
+                    android:textColor="@color/letter"
                     android:text="@string/email2" />
                 <TextView
                     android:id="@+id/tvEmailPerfil"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/letter"
                     android:layout_height="wrap_content" />
             </LinearLayout>
         </RelativeLayout>
@@ -84,10 +95,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
+                    android:textColor="@color/letter"
                     android:text="@string/edad" />
                 <TextView
                     android:id="@+id/tvEdadPerfil"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/letter"
                     android:layout_height="wrap_content" />
             </LinearLayout>
         </RelativeLayout>
@@ -106,10 +119,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
+                    android:textColor="@color/letter"
                     android:text="Celular:" />
                 <TextView
                     android:id="@+id/tvCelularPerfil"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/letter"
                     android:layout_height="wrap_content" />
             </LinearLayout>
         </RelativeLayout>
@@ -126,12 +141,14 @@
                 <TextView
                     android:id="@+id/tviewPais"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/letter"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
                     android:text="Pais:" />
                 <TextView
                     android:id="@+id/tvPaisPerfil"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/letter"
                     android:layout_height="wrap_content" />
             </LinearLayout>
         </RelativeLayout>
@@ -149,11 +166,13 @@
                     android:id="@+id/tviewDepartamento"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/letter"
                     android:paddingRight="10dp"
                     android:text="Departemento:" />
                 <TextView
                     android:id="@+id/tvDepartementoPerfil"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/letter"
                     android:layout_height="wrap_content" />
             </LinearLayout>
         </RelativeLayout>
@@ -172,10 +191,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
+                    android:textColor="@color/letter"
                     android:text="Ciudad:" />
                 <TextView
                     android:id="@+id/tvCiudadPerfil"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/letter"
                     android:layout_height="wrap_content" />
             </LinearLayout>
         </RelativeLayout>
@@ -194,13 +215,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
+                    android:textColor="@color/letter"
                     android:text="Dirección:" />
                 <TextView
                     android:id="@+id/tvDireccionPerfil"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/letter"
                     android:layout_height="wrap_content" />
             </LinearLayout>
         </RelativeLayout>
-
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
     </LinearLayout>
 </FrameLayout>

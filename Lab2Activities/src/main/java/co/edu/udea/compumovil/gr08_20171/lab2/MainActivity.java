@@ -24,6 +24,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private Bundle bundle;
     private String usuarioEmail;
     private String usuario, clave, nombre, celular, pais, departamento, ciudad, direccion, edad;
-    private TextView tvNomP;
+    private TextView letterName;
+    private CircleImageView imgPerfilCir;
     private byte[] foto;
     controladorBD1 controlBD1;
     List<Events> listaEventos;
@@ -45,12 +48,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         controlBD1=new controladorBD1(getApplicationContext());
         setToolbar(); // Setear Toolbar como action bar
-
+        imgPerfilCir=(CircleImageView)findViewById(R.id.imgPerfilCir);
         bundle = getIntent().getExtras();
         usuarioEmail = bundle.getString("user").toString();
         bundle = getIntent().getExtras();
         consultarUser();
-
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
@@ -126,19 +128,14 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase db = controlBD1.getWritableDatabase();
         Cursor cursor=db.rawQuery("SELECT * FROM "+ controladorBD1.DatosTablaEvent.NOMBRE_TABLA,null);
         Events evt= new Events();
-        evt.setNombre("oli");
-        evt.setFecha("oli");
-        evt.setInformación("oli");
-        evt.setOrganizador("oli");
-        evt.setPais("oli");
-        evt.setDepartamento("oli");
-        evt.setCiudad("oli");
-        evt.setLugar("oli");
-        evt.setPuntuacion("oli");
+        evt.setNombre("Nacional vs Medellín");
+        evt.setInformación("Partido correspondiente a la 1 fecha del fpc");
+        evt.setPuntuacion("5");
         evt.setFoto(foto);
         listaEventos = new ArrayList<Events>();
         listaEventos.add(evt);
-        while (cursor.moveToNext()) {
+        if(cursor.getCount()>0) {
+            while (cursor.moveToNext()) {
 
                 String nombre = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE));
                 String fecha = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_FECHA));
@@ -152,18 +149,13 @@ public class MainActivity extends AppCompatActivity {
                 byte[] foto = cursor.getBlob(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_FOTO));
 
                 evt.setNombre(nombre);
-                evt.setFecha(fecha);
                 evt.setInformación(informacion);
-                evt.setOrganizador(organizador);
-                evt.setPais(pais);
-                evt.setDepartamento(departamento);
-                evt.setCiudad(ciudad);
-                evt.setLugar(lugar);
                 evt.setPuntuacion(puntuacion);
                 evt.setFoto(foto);
 
                 listaEventos.add(evt);
             }
+        }
        /*
             Fragment fragment = null;
             crearEvento frag = new crearEvento();

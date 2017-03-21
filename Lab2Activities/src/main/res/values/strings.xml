@@ -33,9 +33,17 @@
     <string name="user">Nombre de usuario</string>
     <string name="etDirection">Dirección</string>
     <string name="etAge">Edad</string>
+    <string name="errorContraseña">La contraseña es muy corta</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="email2">Email:</string>
     <string name="edad">Edad:</string>
+    <string name="Título">Registro de Usuario</string>
+    <string name="errorCorreo">correo no válido</string>
+    <string name="errorUsuario">Usuario no válido</string>
+    <string name="errorNombre">Nombre no valido</string>
+    <string name="errorCelular">numero de contacto invalido</string>
+    <string name="errorGeneral">campo obligatorio</string>
+    <string name="errorEdad">la edad es incorrecta</string>
 </resources>

@@ -1,5 +1,6 @@
 package co.edu.udea.compumovil.gr08_20171.lab2;
 
+import android.Manifest;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,6 +10,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +42,9 @@ public class crearEvento extends Fragment {
     ImageView imgEvento;
     controladorBD1 controlBD1;
     Button btnGuardar;
+    Button cambiarFoto;
     List<Events> listaEventos;
-
+    final int REQUEST_CODE_GALLERY = 999;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -76,6 +80,9 @@ public class crearEvento extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+
     }
 
     @Override
@@ -93,6 +100,10 @@ public class crearEvento extends Fragment {
         etPuntuacion = (EditText)view.findViewById(R.id.etPuntuacionEven);
         imgEvento = (ImageView)view.findViewById(R.id.img_evenPerfil);
         controlBD1 = new controladorBD1(container.getContext());
+
+
+        cambiarFoto = (Button)view.findViewById(R.id.btnCambiarFotoEvem);
+
 
         btnGuardar = (Button)view.findViewById(R.id.btnGuardarEven);
         btnGuardar.setOnClickListener(new View.OnClickListener() {

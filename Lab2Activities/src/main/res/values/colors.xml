@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="window_background">#FFF5F5</color>
+    <color name="backImg">#103FAB</color>
+    <color name="backCircle">#9FF781</color>
+    <color name="backImg2">#97CEEC</color>
     <item name="primary" type="color">#2196F3</item>
     <item name="primaryDark" type="color">#1976D2</item>
     <item name="indigo" type="color">#7C4DFF</item>
     <item name="teal" type="color">#BBDEFB</item>
     <item name="orange" type="color">#FF5722</item>
-    <item name="letter" type="color">#FFFFFF</item>
+    <item name="letter" type="color">#ffffff</item>
     <item name="black" type="color">#212121</item>
     <item name="accent" type="color">#7C4DFF</item>
 </resources>

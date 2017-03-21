@@ -303,7 +303,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/direction"
+                    android:src="@drawable/age"
                     android:paddingRight="16dp"
                     android:layout_gravity="bottom"
                     />
@@ -322,14 +322,20 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal">
                 <ImageView
                     android:id="@+id/img_usuarioReg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
+                    android:layout_height="100dp"
+                    android:src="@drawable/image"
                     android:paddingRight="16dp"
-                    android:src="@mipmap/ic_launcher" />
+                    android:layout_gravity="bottom"
+                    android:layout_width="100dp" />
 
                 <Button
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -366,7 +372,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_scrollFlags="scroll|enterAlways"
-                ></android.support.v7.widget.Toolbar>
+
+                >
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                     >
+
+                <TextView android:id="@+id/txtAbTitulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Título"
+                    android:textColor="@color/letter"
+                    android:textSize="12sp" />
+                </LinearLayout>
+
+            </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
     </android.support.design.widget.CoordinatorLayout>
 

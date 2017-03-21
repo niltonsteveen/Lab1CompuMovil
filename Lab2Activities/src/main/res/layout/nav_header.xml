@@ -16,9 +16,11 @@
         android:layout_height="@dimen/perfil_image_size"
         android:layout_marginBottom="16dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/perfil1"
+        android:src="@drawable/logopng"
         app:border_color="@android:color/white"
-        app:border_width="1dp" />
+        app:border_width="1dp">
+
+    </de.hdodenhof.circleimageview.CircleImageView>
 
     <!-- Nombre de Usuario -->
     <TextView

@@ -20,7 +20,7 @@
             android:weightSum="1">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="229dp"
                 android:background="@drawable/ciudad"
                 android:orientation="vertical"
@@ -97,13 +97,30 @@
 
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
-            <RadioButton
-                android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:id="@+id/linearLayoutRB"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="recordar"
-                android:id="@+id/rbRecordar"
-                android:textSize="20dp"
-                android:allowUndo="false" />
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal"
+                >
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="recordar"
+                    android:id="@+id/rbRecordar"
+                    android:textSize="20dp"
+                    android:allowUndo="false"
+                    android:layout_gravity="center" />
+            </LinearLayout>
+
+
+
             <LinearLayout
                 android:id="@+id/bottom_bar"
                 android:layout_width="match_parent"
