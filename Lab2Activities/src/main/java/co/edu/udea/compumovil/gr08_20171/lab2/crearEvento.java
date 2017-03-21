@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,28 +110,30 @@ public class crearEvento extends Fragment {
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SQLiteDatabase db = controlBD1.getWritableDatabase();
-                ContentValues valores = new ContentValues();
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE, etNombre.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_FECHA, etFecha.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_INFORMACION, etInformacion.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_ORGANIZADOR, etOrganizador.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_PAIS, etPais.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_DEPARTAMENTO, etDepartamento.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_CIUDAD, etCiudad.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_LUGAR, etLugar.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_PUNTUACION, etPuntuacion.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_FOTO,imageViewToByte(imgEvento));
+                if (isValidInfo()) {
+                    SQLiteDatabase db = controlBD1.getWritableDatabase();
+                    ContentValues valores = new ContentValues();
+                    valores.put(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE, etNombre.getText().toString());
+                    valores.put(controladorBD1.DatosTablaEvent.COLUMN_FECHA, etFecha.getText().toString());
+                    valores.put(controladorBD1.DatosTablaEvent.COLUMN_INFORMACION, etInformacion.getText().toString());
+                    valores.put(controladorBD1.DatosTablaEvent.COLUMN_ORGANIZADOR, etOrganizador.getText().toString());
+                    valores.put(controladorBD1.DatosTablaEvent.COLUMN_PAIS, etPais.getText().toString());
+                    valores.put(controladorBD1.DatosTablaEvent.COLUMN_DEPARTAMENTO, etDepartamento.getText().toString());
+                    valores.put(controladorBD1.DatosTablaEvent.COLUMN_CIUDAD, etCiudad.getText().toString());
+                    valores.put(controladorBD1.DatosTablaEvent.COLUMN_LUGAR, etLugar.getText().toString());
+                    valores.put(controladorBD1.DatosTablaEvent.COLUMN_PUNTUACION, etPuntuacion.getText().toString());
+                    valores.put(controladorBD1.DatosTablaEvent.COLUMN_FOTO, imageViewToByte(imgEvento));
 
-                Long emailGuardado = db.insert(controladorBD1.DatosTablaEvent.NOMBRE_TABLA,
-                        controladorBD1.DatosTablaEvent.COLUMN_ID,valores);
-                Toast.makeText(container.getContext(),"Se guardo el evento"+emailGuardado, Toast.LENGTH_LONG).show();
-                consultarEvents();
-                Fragment fragment = null;
-                eventos even = new eventos();
-                even.setLista(listaEventos);
-                fragment = even;
-                getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
+                    Long emailGuardado = db.insert(controladorBD1.DatosTablaEvent.NOMBRE_TABLA,
+                            controladorBD1.DatosTablaEvent.COLUMN_ID, valores);
+                    Toast.makeText(container.getContext(), "Se guardo el evento" + emailGuardado, Toast.LENGTH_LONG).show();
+                    consultarEvents();
+                    Fragment fragment = null;
+                    eventos even = new eventos();
+                    even.setLista(listaEventos);
+                    fragment = even;
+                    getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
+                }
             }
         });
 
@@ -139,6 +142,55 @@ public class crearEvento extends Fragment {
         return view;
     }
 
+    private boolean isValidInfo() {
+        boolean res=false;
+        if(TextUtils.isEmpty(etNombre.getText())) {
+            etNombre.setError(getString(R.string.errorGeneral));
+            etNombre.requestFocus();
+            res = false;
+        }else if (TextUtils.isEmpty(etFecha.getText())){
+            etFecha.setError(getString(R.string.errorGeneral));
+            etFecha.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etInformacion.getText())){
+            etInformacion.setError(getString(R.string.errorGeneral));
+            etInformacion.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etOrganizador.getText())){
+            etOrganizador.setError(getString(R.string.errorGeneral));
+            etOrganizador.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etPais.getText())){
+            etPais.setError(getString(R.string.errorGeneral));
+            etPais.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etDepartamento.getText())){
+            etDepartamento.setError(getString(R.string.errorGeneral));
+            etDepartamento.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etCiudad.getText())){
+            etCiudad.setError(getString(R.string.errorGeneral));
+            etCiudad.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etLugar.getText())){
+            etLugar.setError(getString(R.string.errorGeneral));
+            etLugar.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etDepartamento.getText())){
+            etDepartamento.setError(getString(R.string.errorGeneral));
+            etDepartamento.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etPuntuacion.getText())||!TextUtils.isDigitsOnly(etPuntuacion.getText())){
+            etPuntuacion.setError(getString(R.string.errorGeneral));
+            etPuntuacion.requestFocus();
+            res=false;
+        }else if(imgEvento==null){
+            res=false;
+        }else{
+            res=true;
+        }
+        return res;
+    }
 
     private void consultarEvents() {
         SQLiteDatabase db = controlBD1.getWritableDatabase();
