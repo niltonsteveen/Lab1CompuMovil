@@ -4,22 +4,18 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.support.design.widget.NavigationView;
 import android.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment = null;
         switch(title) {
             case "Configuraciones":
-                getFragmentManager().beginTransaction().replace(R.id.main_content, fragmentPreferenceConfi.newInstance()).commit();
+                getFragmentManager().beginTransaction().replace(R.id.main_content, PreFragConf.newInstance()).commit();
                 break;
             case "Eventos":
                 consultarEvents();
@@ -222,20 +218,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class fragmentPreferenceConfi extends PreferenceFragment {
-        public static fragmentPreferenceConfi newInstance() {
 
-            Bundle args = new Bundle();
-
-            fragmentPreferenceConfi fragment = new fragmentPreferenceConfi();
-            fragment.setArguments(args);
-            return fragment;
-        }
-        @Override
-        public void onCreate(Bundle savedInstanceState){
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.f_configuracion);
-        }
-    }
 
 }
