@@ -1,6 +1,7 @@
 package co.edu.udea.compumovil.gr08_20171.lab2;
 
 import android.Manifest;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -35,6 +36,7 @@ public class CreaEvent extends AppCompatActivity {
     controladorBD1 controlBD1;
     Button btnGuardar, btnCambiarImg;
     Button cambiarFoto;
+    Button btnMostrarFecha;
     List<Events> listaEventos;
     final int REQUEST_CODE_GALLERY = 999;
 
@@ -53,6 +55,8 @@ public class CreaEvent extends AppCompatActivity {
         etPuntuacion = (EditText)findViewById(R.id.etPuntuacionEven);
         imgEvento = (ImageView)findViewById(R.id.img_evenPerfil);
         controlBD1 = new controladorBD1(getApplication());
+
+        btnMostrarFecha =(Button)findViewById(R.id.btnFechaEvento);
 
         cambiarFoto = (Button)findViewById(R.id.btnCambiarFotoEvem);
         btnGuardar = (Button)findViewById(R.id.btnGuardarEven);
@@ -101,6 +105,11 @@ public class CreaEvent extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getFragmentManager(), "datePicker");
     }
 
     public boolean isValidInfo(){
