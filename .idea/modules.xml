@@ -3,8 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Lab1-UI/Lab1-UI.iml" filepath="$PROJECT_DIR$/Lab1-UI/Lab1-UI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Lab1-UI/Lab1-UI.iml" filepath="$PROJECT_DIR$/Lab1-UI/Lab1-UI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Lab2Activities/Lab2Activities.iml" filepath="$PROJECT_DIR$/Lab2Activities/Lab2Activities.iml" />
       <module fileurl="file://$PROJECT_DIR$/Lab2Activities/Lab2Activities.iml" filepath="$PROJECT_DIR$/Lab2Activities/Lab2Activities.iml" />
       <module fileurl="file://$PROJECT_DIR$/LaboratoriosCompuMovil.iml" filepath="$PROJECT_DIR$/LaboratoriosCompuMovil.iml" />
+      <module fileurl="file://$PROJECT_DIR$/laboratorioscompumovil.iml" filepath="$PROJECT_DIR$/laboratorioscompumovil.iml" />
     </modules>
   </component>
 </project>
