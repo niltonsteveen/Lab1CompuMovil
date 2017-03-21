@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case "Perfil":
                 per frag = new per();
-                frag.setPerfil(nombre,usuarioEmail,celular,pais,departamento,ciudad,direccion,edad,foto);
+                frag.setPerfil(usuario,clave,nombre,usuarioEmail,celular,pais,departamento,ciudad,direccion,edad,foto);
                 fragment = frag;
                 getFragmentManager().beginTransaction().replace(R.id.main_content,fragment).commit();
                 break;

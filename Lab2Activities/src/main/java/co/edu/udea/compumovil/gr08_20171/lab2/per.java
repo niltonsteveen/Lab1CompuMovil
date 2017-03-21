@@ -1,6 +1,7 @@
 package co.edu.udea.compumovil.gr08_20171.lab2;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.textservice.TextInfo;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,8 +31,9 @@ public class per extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private TextView tvNombre, tvEmail, tvCelular, tvPais, tvDepartamento, tvCiudad, tvDireccion,
             tvEdad, tvNombreMenu, tvEmailMenu;
+    Button btnActualizar;
     private ImageView imgPerfil;
-    private String nombre, email, celular, pais, departamento, ciudad, direccion, edad;
+    private String usuario, pass, nombre, email, celular, pais, departamento, ciudad, direccion, edad;
     private byte[] foto;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -43,8 +46,11 @@ public class per extends Fragment {
     }
 
 
-    public void setPerfil( String nombre, String email, String celular,
+    public void setPerfil( String usuario, String pass, String nombre, String email, String celular,
                                 String pais, String departamento,String ciudad, String direccion, String edad, byte[] foto) {
+
+        this.usuario = usuario;
+        this.pass = pass;
         this.nombre = nombre;
         this.email = email;
         this.celular = celular;
@@ -85,27 +91,49 @@ public class per extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
+        final Object[] datos = new Object[11];
         View view = inflater.inflate(R.layout.fragment_per, container, false);
+        datos[0] = usuario;
+        datos[1] = pass;
         tvNombre = (TextView) view.findViewById(R.id.tvNombrePerfil);
         tvNombre.setText(nombre);
+        datos[2] = nombre;
         tvEmail = (TextView) view.findViewById(R.id.tvEmailPerfil);
         tvEmail.setText(email);
+        datos[3] = email;
         tvCelular = (TextView) view.findViewById(R.id.tvCelularPerfil);
         tvCelular.setText(celular);
+        datos[4] = celular;
         tvPais = (TextView) view.findViewById(R.id.tvPaisPerfil);
         tvPais.setText(pais);
+        datos[5] = pais;
         tvDepartamento = (TextView) view.findViewById(R.id.tvDepartementoPerfil);
         tvDepartamento.setText(departamento);
+        datos[6] = departamento;
         tvCiudad = (TextView) view.findViewById(R.id.tvCiudadPerfil);
         tvCiudad.setText(ciudad);
+        datos[7] = ciudad;
         tvDireccion = (TextView) view.findViewById(R.id.tvDireccionPerfil);
         tvDireccion.setText(direccion);
+        datos[8] = direccion;
         tvEdad = (TextView) view.findViewById(R.id.tvEdadPerfil);
         tvEdad.setText(edad);
+        datos[9] = edad;
         imgPerfil = (ImageView) view.findViewById(R.id.imgPerfil);
         imgPerfil.setImageBitmap(byteImgToBitmap(foto));
+        datos[10] = byteImgToBitmap(foto);
+        btnActualizar = (Button)view.findViewById(R.id.btnEditPerfil);
+
+        btnActualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(container.getContext(),EditarPerfil.class);
+                intent.putExtra("userCorreo",datos);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 

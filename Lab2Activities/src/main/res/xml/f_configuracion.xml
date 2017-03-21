@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-        android:title="Modificar perfil">
-        <EditTextPreference
-            android:key="nombre_guar"
-            android:title="Nombre User"
-            android:summary="Modifique su nombre"
-            android:dialogTitle="" />
+    <SwitchPreference
+        android:key="editar_perfil"
+        android:title="Activar opción de configuración"
+        android:summary="Si usted va a editar su perfil se debe activar esta opción para habilitar el botón de dciha función."
+        android:defaultValue="true"/>
 
-    </PreferenceCategory>
 
     <SwitchPreference
         android:key="sesion_activa"

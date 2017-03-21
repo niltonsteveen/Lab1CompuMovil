@@ -1,6 +1,7 @@
 package co.edu.udea.compumovil.gr08_20171.lab2;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -79,7 +80,7 @@ public class eventos extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event, container, false);
 
@@ -111,10 +112,8 @@ public class eventos extends Fragment {
         bf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = null;
-                crearEvento frag = new crearEvento();
-                fragment = frag;
-                getFragmentManager().beginTransaction().replace(R.id.main_content,fragment).commit();
+                Intent intent=new Intent(container.getContext(),CreaEvent.class);
+                startActivity(intent);
             }
         });
         return view;
