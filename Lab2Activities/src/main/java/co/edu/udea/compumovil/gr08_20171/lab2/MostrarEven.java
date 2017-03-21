@@ -1,6 +1,7 @@
 package co.edu.udea.compumovil.gr08_20171.lab2;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -138,16 +139,19 @@ public class MostrarEven extends Fragment {
         btnVerUbicacion=(Button)view.findViewById(R.id.btnUbicacion);
         ubic=(this.getEventos().get(this.getSelected()).getLugar());
 
-        ubic=this.getEventos().get(this.getSelected()).getPais()+";"+
-                this.getEventos().get(this.getSelected()).getDepartamento()+";"+
-                this.getEventos().get(this.getSelected()).getCiudad()+";"+
-                this.getEventos().get(this.getSelected()).getLugar();
-        String a []=ubic.split(";");
+        ubic= this.getEventos().get(this.getSelected()).getLugar()+", "+
+                this.getEventos().get(this.getSelected()).getCiudad()+", "+
+                this.getEventos().get(this.getSelected()).getDepartamento()+", "+
+                this.getEventos().get(this.getSelected()).getPais();
+
 
         btnVerUbicacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q= "+ubic);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
             }});
 
 
