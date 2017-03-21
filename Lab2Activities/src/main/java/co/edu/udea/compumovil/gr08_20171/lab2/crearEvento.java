@@ -41,7 +41,7 @@ public class crearEvento extends Fragment {
     EditText etNombre,etFecha,etInformacion,etOrganizador,etPais,etDepartamento,etCiudad,etLugar,etPuntuacion;
     ImageView imgEvento;
     controladorBD1 controlBD1;
-    Button btnGuardar;
+    Button btnGuardar, btnCambiarImg;
     Button cambiarFoto;
     List<Events> listaEventos;
     final int REQUEST_CODE_GALLERY = 999;
@@ -133,8 +133,12 @@ public class crearEvento extends Fragment {
                 getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
             }
         });
+
+        btnCambiarImg = (Button)view.findViewById(R.id.btnCambiarFotoEvem);
+       
         return view;
     }
+
 
     private void consultarEvents() {
         SQLiteDatabase db = controlBD1.getWritableDatabase();

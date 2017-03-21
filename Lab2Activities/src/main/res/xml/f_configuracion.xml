@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory
+        android:title="Modificar perfil">
+        <EditTextPreference
+            android:key="nombre_guar"
+            android:title="Nombre User"
+            android:summary="Modifique su nombre"
+            android:dialogTitle="" />
+
+    </PreferenceCategory>
+
     <SwitchPreference
         android:key="sesion_activa"
         android:title="Mantener sesión activa"
