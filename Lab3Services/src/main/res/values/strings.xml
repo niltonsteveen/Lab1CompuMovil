@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">"Lab2Activities "</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="error_invalid_email">El correo ingresado es inválido</string>
+    <string name="error_invalid_password">La contraseña no puede ser vacía</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">Este campo es obligatorio</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="Correo">Correo Electrónico</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="usuario">Nombre de Usuario</string>
+    <string name="usuario2">Nombre de Usuario:</string>
+    <string name="names">Nombre completo</string>
+    <string name="phone">Teléfono de contacto</string>
+    <string name="pais">País</string>
+    <string name="etDpto">Departamento</string>
+    <string name="etcity">Ciudad</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="Eventos">Eventos</string>
+    <string name="perfil">Perfil</string>
+    <string name="configuracion">Configuraciones</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="info">Acerca de</string>
+    <string name="Config">Configuración</string>
+    <string name="user">Nombre de usuario</string>
+    <string name="etDirection">Dirección</string>
+    <string name="etAge">Edad</string>
+    <string name="errorContraseña">La contraseña es muy corta</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="email2">Email:</string>
+    <string name="edad">Edad:</string>
+    <string name="Título">Registro de Usuario</string>
+    <string name="errorCorreo">correo no válido</string>
+    <string name="errorUsuario">Usuario no válido</string>
+    <string name="errorNombre">Nombre no valido</string>
+    <string name="errorCelular">numero de contacto invalido</string>
+    <string name="errorGeneral">campo obligatorio</string>
+    <string name="errorEdad">la edad es incorrecta</string>
+</resources>

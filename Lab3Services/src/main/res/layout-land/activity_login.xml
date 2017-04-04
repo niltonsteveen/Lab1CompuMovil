@@ -1,0 +1,157 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context="co.edu.udea.compumovil.gr08_20171.lab2.LoginActivity">
+
+    <!-- Login progress -->
+    <ProgressBar
+        android:id="@+id/login_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
+
+
+
+        <RelativeLayout
+            android:id="@+id/email_login_form"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:background="@drawable/ciudad"
+                android:orientation="vertical"
+                android:weightSum="1"
+                android:id="@+id/layoutImg"
+                android:layout_width="250dp">
+
+            </LinearLayout>
+            <ScrollView
+                android:id="@+id/login_form"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/teal"
+                android:layout_toRightOf="@+id/layoutImg">
+                <LinearLayout
+                    android:id="@+id/layoutright"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="1">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/textlogo"
+                        android:paddingLeft="25dp"
+                        android:paddingRight="25dp"
+                        android:id="@+id/imgApp" />
+
+                    <LinearLayout
+                        android:id="@+id/linearLayoutUser"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:descendantFocusability="beforeDescendants"
+                        android:focusableInTouchMode="true"
+                        android:orientation="horizontal"
+                        android:layout_below="@+id/imgApp">
+                        <ImageView
+                            android:id="@+id/img_user"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:paddingRight="16dp"
+                            android:src="@drawable/user" />
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/etUser"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/Correo"
+                                android:inputType="textEmailAddress"
+                                android:maxLines="1" />
+
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/linearLayoutPass"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:descendantFocusability="beforeDescendants"
+                        android:focusableInTouchMode="true"
+                        android:orientation="horizontal"
+                        android:layout_below="@+id/ejem2">
+                        <ImageView
+                            android:id="@+id/img_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:paddingRight="16dp"
+                            android:src="@drawable/lock"/>
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <EditText
+                                android:id="@+id/password"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/password"
+                                android:imeActionId="@+id/login"
+                                android:imeActionLabel="@string/login"
+                                android:imeOptions="actionUnspecified"
+                                android:inputType="textPassword"
+                                android:maxLines="1"/>
+
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/bottom_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:paddingRight="20dp"
+                        android:paddingLeft="20dp"
+                        android:layout_marginTop="30dp"
+                        android:orientation="horizontal"
+                        android:layout_gravity="bottom"
+                        android:layout_below="@+id/linearLayoutPass">
+                        <Button
+                            android:id="@+id/btnLogin"
+                            android:textColor="@color/letter"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/primaryDark"
+                            android:text="@string/login" />
+                        <Button
+                            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                            android:id="@+id/btnRegistrarse"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/registrarse"
+                            android:textColor="@color/primaryDark" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </ScrollView>
+        </RelativeLayout>
+
+</LinearLayout>
