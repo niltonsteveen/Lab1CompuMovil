@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
                 break;
             case "Perfil":
+                consultarUser();
                 per frag = new per();
                 frag.setPerfil(usuario,clave,nombre,usuarioEmail,celular,pais,departamento,ciudad,direccion,edad,foto);
                 fragment = frag;
@@ -129,11 +130,12 @@ public class MainActivity extends AppCompatActivity {
     private void consultarEvents() {
         SQLiteDatabase db = controlBD1.getWritableDatabase();
         Cursor cursor=db.rawQuery("SELECT * FROM "+ controladorBD1.DatosTablaEvent.NOMBRE_TABLA,null);
-        Events evt= new Events();
+        Events evt= null;
         listaEventos = new ArrayList<Events>();
         listaEventos1 = new ArrayList<Events>();
         if(cursor.getCount()>0) {
             while (cursor.moveToNext()) {
+                evt=new Events();
                 String nombre = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE));
                 String fecha = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_FECHA));
                 String informacion = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_INFORMACION));
@@ -166,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+
        /*
             Fragment fragment = null;
             crearEvento frag = new crearEvento();

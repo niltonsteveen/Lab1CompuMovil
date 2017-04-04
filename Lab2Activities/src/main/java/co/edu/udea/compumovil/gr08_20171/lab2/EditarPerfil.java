@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,8 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EditarPerfil extends AppCompatActivity {
 
@@ -71,25 +74,27 @@ public class EditarPerfil extends AppCompatActivity {
         btnActulizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SQLiteDatabase db = controlBD1.getWritableDatabase();
-                ContentValues valores = new ContentValues();
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_USUARIO,etUsuario.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_CONTRASENA,etContrasena.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_NOMBRE,etNombre.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_EMAIL,etEmail.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_CELULAR,etCelular.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_PAIS,etPais.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_DEPARTAMENTO,etDepartamento.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_CIUDAD,etCiudad.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_DIRECCION,etDireccion.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_EDAD,etEdad.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_FOTO,imageViewToByte(imgUsuario));
-                String[] arqsel = {usuarioCorreo};
-                String Selection = controladorBD1.DatosTablaUser.COLUMN_EMAIL+"=?";
+                if(isValidInfo()) {
+                    SQLiteDatabase db = controlBD1.getWritableDatabase();
+                    ContentValues valores = new ContentValues();
+                    valores.put(controladorBD1.DatosTablaUser.COLUMN_USUARIO, etUsuario.getText().toString());
+                    valores.put(controladorBD1.DatosTablaUser.COLUMN_CONTRASENA, etContrasena.getText().toString());
+                    valores.put(controladorBD1.DatosTablaUser.COLUMN_NOMBRE, etNombre.getText().toString());
+                    valores.put(controladorBD1.DatosTablaUser.COLUMN_EMAIL, etEmail.getText().toString());
+                    valores.put(controladorBD1.DatosTablaUser.COLUMN_CELULAR, etCelular.getText().toString());
+                    valores.put(controladorBD1.DatosTablaUser.COLUMN_PAIS, etPais.getText().toString());
+                    valores.put(controladorBD1.DatosTablaUser.COLUMN_DEPARTAMENTO, etDepartamento.getText().toString());
+                    valores.put(controladorBD1.DatosTablaUser.COLUMN_CIUDAD, etCiudad.getText().toString());
+                    valores.put(controladorBD1.DatosTablaUser.COLUMN_DIRECCION, etDireccion.getText().toString());
+                    valores.put(controladorBD1.DatosTablaUser.COLUMN_EDAD, etEdad.getText().toString());
+                    valores.put(controladorBD1.DatosTablaUser.COLUMN_FOTO, imageViewToByte(imgUsuario));
+                    String[] arqsel = {usuarioCorreo};
+                    String Selection = controladorBD1.DatosTablaUser.COLUMN_EMAIL + "=?";
 
-                int count = db.update(controladorBD1.DatosTablaUser.NOMBRE_TABLA,valores, Selection,arqsel);
-                Toast.makeText(getApplication(),"Actualizo correctamente", Toast.LENGTH_LONG).show();
-                finish();
+                    int count = db.update(controladorBD1.DatosTablaUser.NOMBRE_TABLA, valores, Selection, arqsel);
+                    Toast.makeText(getApplication(), "Actualizo correctamente", Toast.LENGTH_LONG).show();
+                    finish();
+                }
             }
 
             private byte[] imageViewToByte(ImageView imgUsuario) {
@@ -114,6 +119,57 @@ public class EditarPerfil extends AppCompatActivity {
             }
         });
     }
+
+    public boolean isValidInfo(){
+        boolean res=false;
+        if(TextUtils.isEmpty(etUsuario.getText())) {
+            etUsuario.setError(getString(R.string.errorUsuario));
+            etUsuario.requestFocus();
+            res = false;
+        }else if (etContrasena.getText().length()<7 || TextUtils.isEmpty(etContrasena.getText())){
+            etContrasena.setError(getString(R.string.errorContraseña));
+            etContrasena.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etNombre.getText())){
+            etNombre.setError(getString(R.string.errorNombre));
+            etNombre.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etEmail.getText())||!validateEmail(etEmail.getText().toString())){
+            etEmail.setError(getString(R.string.errorCorreo));
+            etEmail.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etCelular.getText())||!TextUtils.isDigitsOnly(etCelular.getText())){
+            etCelular.setError(getString(R.string.errorCelular));
+            etCelular.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etPais.getText())){
+            etPais.setError(getString(R.string.errorGeneral));
+            etPais.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etCiudad.getText())){
+            etCiudad.setError(getString(R.string.errorGeneral));
+            etCiudad.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etDireccion.getText())){
+            etDireccion.setError(getString(R.string.errorGeneral));
+            etDireccion.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etDepartamento.getText())){
+            etDepartamento.setError(getString(R.string.errorGeneral));
+            etDepartamento.requestFocus();
+            res=false;
+        }else if(TextUtils.isEmpty(etEdad.getText())||!TextUtils.isDigitsOnly(etEdad.getText())){
+            etEdad.setError(getString(R.string.errorEdad));
+            etEdad.requestFocus();
+            res=false;
+        }else if(imgUsuario==null){
+            res=false;
+        }else{
+            res=true;
+        }
+        return res;
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -148,5 +204,19 @@ public class EditarPerfil extends AppCompatActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+    public static boolean validateEmail(String email) {
+
+        // Compiles the given regular expression into a pattern.
+        Pattern pattern = Pattern.compile(PATTERN_EMAIL);
+
+        // Match the given input against this pattern
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+
     }
 }
