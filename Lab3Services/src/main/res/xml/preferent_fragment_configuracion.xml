@@ -6,7 +6,8 @@
         android:entryValues="@array/texto_values"
         android:key="tiempoActu"
         android:summary="Seleccione cada cuantos segundo se debe actualizar los eventos"
-        android:title="Tiempo de sincronización" />
+        android:title="Tiempo de sincronización"
+        />
 
     <SwitchPreference
         android:key="sesion_activa"

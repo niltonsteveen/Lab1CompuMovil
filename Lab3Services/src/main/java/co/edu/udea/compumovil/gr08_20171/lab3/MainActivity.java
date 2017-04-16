@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView letterName;
     private CircleImageView imgPerfilCir;
     private byte[] foto;
+    int tiempo;
    // controladorBD1 controlBD1;
     List<Events> listaEventos;
     List<Events> listaEventos1;
@@ -45,6 +48,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String temp = pref.getString("tiempoActu","60 s");
+        if(temp.length()<5){
+            tiempo = Integer.parseInt(temp.substring(0,2));
+        }
+        else{
+            tiempo = Integer.parseInt(temp.substring(0,3));
+        }
+        time time = new time();
+        time.execute(tiempo);
+
        // controlBD1=new controladorBD1(getApplicationContext());
         setToolbar(); // Setear Toolbar como action bar
         imgPerfilCir=(CircleImageView)findViewById(R.id.imgPerfilCir);
@@ -218,5 +233,48 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void hilo(){
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void volveraIniciar(){
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String temp = pref.getString("tiempoActu","60 s");
+        if(temp.length()<5){
+            tiempo = Integer.parseInt(temp.substring(0,2));
+        }
+        else{
+            tiempo = Integer.parseInt(temp.substring(0,3));
+
+        }
+        Log.i("tiempo actu",tiempo+"");
+        time time = new time();
+        time.execute(tiempo);
+    }
+
+    public class time extends AsyncTask<Integer,Integer,Boolean>
+    {
+
+        @Override
+        protected Boolean doInBackground(Integer... params) {
+
+            int tiemp = params[0]-50;
+            for(int i = 0; i <= tiemp; i++){
+                hilo();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            volveraIniciar();
+            Toast.makeText(getApplicationContext(), "Se actualizo los eventos", Toast.LENGTH_LONG).show();
+
+        }
+    }
 
 }
