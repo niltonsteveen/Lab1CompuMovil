@@ -10,15 +10,28 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -34,6 +47,7 @@ public class CreaEvent extends AppCompatActivity {
     Button btnGuardar, btnCambiarImg;
     Button cambiarFoto;
     List<Events> listaEventos;
+    byte[] imgB;
     final int REQUEST_CODE_GALLERY = 999;
 
     @Override
@@ -50,6 +64,7 @@ public class CreaEvent extends AppCompatActivity {
         etLugar = (EditText)findViewById(R.id.etLugarEven);
         etPuntuacion = (EditText)findViewById(R.id.etPuntuacionEven);
         imgEvento = (ImageView)findViewById(R.id.img_evenPerfil);
+        imgB = imageViewToByte(imgEvento);
         controlBD1 = new controladorBD1(getApplication());
 
         cambiarFoto = (Button)findViewById(R.id.btnCambiarFotoEvem);
@@ -57,23 +72,19 @@ public class CreaEvent extends AppCompatActivity {
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SQLiteDatabase db = controlBD1.getWritableDatabase();
-                ContentValues valores = new ContentValues();
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE, etNombre.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_FECHA, etFecha.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_INFORMACION, etInformacion.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_ORGANIZADOR, etOrganizador.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_PAIS, etPais.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_DEPARTAMENTO, etDepartamento.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_CIUDAD, etCiudad.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_LUGAR, etLugar.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_PUNTUACION, etPuntuacion.getText().toString());
-                valores.put(controladorBD1.DatosTablaEvent.COLUMN_FOTO,imageViewToByte(imgEvento));
-
-                Long eventoGuardado = db.insert(controladorBD1.DatosTablaEvent.NOMBRE_TABLA,
-                        controladorBD1.DatosTablaEvent.COLUMN_ID,valores);
-                Toast.makeText(getApplication(),"Se guardo el evento"+eventoGuardado, Toast.LENGTH_LONG).show();
-                finish();
+                AddEvent addEvent = new AddEvent();
+                addEvent.execute(
+                        etNombre.getText().toString(),
+                        etFecha.getText().toString(),
+                        etInformacion.getText().toString(),
+                        etOrganizador.getText().toString(),
+                        etPais.getText().toString(),
+                        etDepartamento.getText().toString(),
+                        etCiudad.getText().toString(),
+                        etLugar.getText().toString(),
+                        etPuntuacion.getText().toString(),
+                        Base64.encodeToString(imgB,Base64.DEFAULT)
+                );
             }
         });
 
@@ -134,5 +145,81 @@ public class CreaEvent extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
         byte[] byteArray = stream.toByteArray();
         return byteArray;
+    }
+
+
+    private class AddEvent extends AsyncTask<String, Void, Void> {
+        private String TAG = "AddEvent";
+        private String respuesta;
+
+        @Override
+        protected Void doInBackground(String... params){
+
+            Log.i(TAG,"doInBackgound");
+
+            HttpClient httpClient = new DefaultHttpClient();
+
+            String iName = params[0];
+            String iDate = params[1];;
+            String iInformation = params[2];
+            String iOrganizator = params[3];
+            String iCountry = params[4];
+            String iCity = params[5];
+            String iDepartment = params[6];
+            String iPlace = params[7];
+            String iPuntuation = params[8];
+            String foto = params[9];
+
+            Log.i(TAG,"foto enB4 "+params[9]);
+
+            HttpPost post = new HttpPost("https://apirest-eventos.herokuapp.com/allEvents/");
+
+            post.setHeader("content-type","application/x-www-form-urlencoded");
+
+            try{
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair("name", iName));
+                pairs.add(new BasicNameValuePair("date", iDate));
+                pairs.add(new BasicNameValuePair("information", iInformation));
+                pairs.add(new BasicNameValuePair("organizator", iOrganizator));
+                pairs.add(new BasicNameValuePair("country", iCountry));
+                pairs.add(new BasicNameValuePair("department", iDepartment));
+                pairs.add(new BasicNameValuePair("city", iCity));
+                pairs.add(new BasicNameValuePair("place", iPlace));
+                pairs.add(new BasicNameValuePair("puntuation", iPuntuation));
+                pairs.add(new BasicNameValuePair("photo",foto));
+                post.setEntity(new UrlEncodedFormEntity(pairs));
+
+                HttpResponse resp = httpClient.execute(post);
+                String respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+
+                respuesta = respJSON.toString();
+            }
+            catch (Exception ex)
+            {
+                Log.e("ServicioRest","Error!",ex);
+                ex.printStackTrace();
+            }
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void result){
+            Log.i(TAG,"onPostExecute + "+respuesta);
+            Toast.makeText(getApplicationContext(), "Se guardo el registro", Toast.LENGTH_LONG).show();
+            Intent verPerfil = new Intent(CreaEvent.this, MainActivity.class);
+            startActivity(verPerfil);
+        }
+
+        @Override
+        protected void onPreExecute(){
+            Log.i(TAG,"onPreExecute");
+
+        }
+
     }
 }

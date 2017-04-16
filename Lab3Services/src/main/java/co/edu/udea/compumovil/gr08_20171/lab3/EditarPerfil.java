@@ -9,19 +9,35 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditarPerfil extends AppCompatActivity {
 
@@ -29,6 +45,7 @@ public class EditarPerfil extends AppCompatActivity {
     EditText etUsuario, etContrasena, etNombre, etEmail, etCelular, etPais, etDepartamento,
             etCiudad, etDireccion, etEdad;
     ImageView imgUsuario;
+    byte[] imgByte;
    // controladorBD1 controlBD1;
     private String usuarioCorreo;
     Object[] datos;
@@ -64,40 +81,28 @@ public class EditarPerfil extends AppCompatActivity {
         etEdad.setText((String)datos[9]);
         imgUsuario = (ImageView)findViewById(R.id.img_usuarioPerfil);
         imgUsuario.setImageBitmap((Bitmap)datos[10]);
+        imgByte = imageViewToByte(imgUsuario);
 
-    //    controlBD1 = new controladorBD1(getApplicationContext());
+        //    controlBD1 = new controladorBD1(getApplicationContext());
 
         btnActulizar = (Button)findViewById(R.id.btnActuPerfil);
         btnActulizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              /*  SQLiteDatabase db = controlBD1.getWritableDatabase();
-                ContentValues valores = new ContentValues();
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_USUARIO,etUsuario.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_CONTRASENA,etContrasena.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_NOMBRE,etNombre.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_EMAIL,etEmail.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_CELULAR,etCelular.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_PAIS,etPais.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_DEPARTAMENTO,etDepartamento.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_CIUDAD,etCiudad.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_DIRECCION,etDireccion.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_EDAD,etEdad.getText().toString());
-                valores.put(controladorBD1.DatosTablaUser.COLUMN_FOTO,imageViewToByte(imgUsuario));
-                String[] arqsel = {usuarioCorreo};
-                String Selection = controladorBD1.DatosTablaUser.COLUMN_EMAIL+"=?";
-
-                int count = db.update(controladorBD1.DatosTablaUser.NOMBRE_TABLA,valores, Selection,arqsel);
-                Toast.makeText(getApplication(),"Actualizo correctamente", Toast.LENGTH_LONG).show();
-                finish();*/
-            }
-
-            private byte[] imageViewToByte(ImageView imgUsuario) {
-                Bitmap bitmap = ((BitmapDrawable)imgUsuario.getDrawable()).getBitmap();
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
-                byte[] byteArray = stream.toByteArray();
-                return byteArray;
+                actuUser tarea = new actuUser();
+                tarea.execute(
+                        etUsuario.getText().toString(),
+                        etContrasena.getText().toString(),
+                        etNombre.getText().toString(),
+                        etEmail.getText().toString(),
+                        etCelular.getText().toString(),
+                        etPais.getText().toString(),
+                        etDepartamento.getText().toString(),
+                        etCiudad.getText().toString(),
+                        etDireccion.getText().toString(),
+                        etEdad.getText().toString(),
+                        Base64.encodeToString(imgByte,Base64.DEFAULT)
+                );
             }
         });
 
@@ -148,5 +153,90 @@ public class EditarPerfil extends AppCompatActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private class actuUser extends AsyncTask<String, Void, Void> {
+        private String TAG = "actuUser";
+        private String respuesta;
+
+        @Override
+        protected Void doInBackground(String... params){
+
+            Log.i(TAG,"doInBackgound");
+
+            HttpClient httpClient = new DefaultHttpClient();
+
+            String iUsername = params[0];
+            String iPassword = params[1];;
+            String iName = params[2];
+            String iEmail = params[3];
+            String iPhone = params[4];
+            String iCountry = params[5];
+            String iCity = params[6];
+            String iDepartment = params[7];
+            String iDirection = params[8];
+            String iAge = params[9];
+            String foto = params[10];
+
+            Log.i(TAG,"foto enB4 "+params[10]);
+
+            HttpPut put = new HttpPut("https://apirest-eventos.herokuapp.com/allusers/");
+
+            put.setHeader("content-type","application/x-www-form-urlencoded");
+
+            try{
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair("username", iUsername));
+                pairs.add(new BasicNameValuePair("password", iPassword));
+                pairs.add(new BasicNameValuePair("name", iName));
+                pairs.add(new BasicNameValuePair("email", iEmail));
+                pairs.add(new BasicNameValuePair("phone", iPhone));
+                pairs.add(new BasicNameValuePair("country", iCountry));
+                pairs.add(new BasicNameValuePair("department", iDepartment));
+                pairs.add(new BasicNameValuePair("city", iCity));
+                pairs.add(new BasicNameValuePair("direction", iDirection));
+                pairs.add(new BasicNameValuePair("age", iAge));
+                pairs.add(new BasicNameValuePair("photo",foto));
+                put.setEntity(new UrlEncodedFormEntity(pairs));
+
+                HttpResponse resp = httpClient.execute(put);
+                String respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+
+                respuesta = respJSON.toString();
+            }
+            catch (Exception ex)
+            {
+                Log.e("ServicioRest","Error!",ex);
+                ex.printStackTrace();
+            }
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void result){
+            Log.i(TAG,"onPostExecute + "+respuesta);
+            Toast.makeText(getApplicationContext(), "Se actualizo usuario", Toast.LENGTH_LONG).show();
+            Intent verPerfil = new Intent(EditarPerfil.this, LoginActivity.class);
+            startActivity(verPerfil);
+        }
+
+        @Override
+        protected void onPreExecute(){
+            Log.i(TAG,"onPreExecute");
+
+        }
+
+    }
+
+    private byte[] imageViewToByte(ImageView imgUsuario) {
+        Bitmap bitmap = ((BitmapDrawable)imgUsuario.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
     }
 }
