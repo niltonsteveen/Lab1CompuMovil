@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -22,6 +24,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -40,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private CircleImageView imgPerfilCir;
     private byte[] foto;
     int tiempo;
-   // controladorBD1 controlBD1;
+    Context context = this;
+    controladorBD1 controlBD1;
     List<Events> listaEventos;
     List<Events> listaEventos1;
     SharedPreferences sharpref;
@@ -60,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         time time = new time();
         time.execute(tiempo);
 
-       // controlBD1=new controladorBD1(getApplicationContext());
+        controlBD1=new controladorBD1(getApplicationContext());
         setToolbar(); // Setear Toolbar como action bar
         imgPerfilCir=(CircleImageView)findViewById(R.id.imgPerfilCir);
         bundle = getIntent().getExtras();
@@ -108,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
                 getFragmentManager().beginTransaction().replace(R.id.main_content, new PreFragConf()).commit();
                 break;
             case "Eventos":
+                ActualizarBD actualizarBD = new ActualizarBD(context);
+                //while(!actualizarBD.termino()){}
                 consultarEvents();
                 eventos even = new eventos();
                 even.setLista(listaEventos);
@@ -163,17 +169,19 @@ public class MainActivity extends AppCompatActivity {
         ciudad = usuarioDatos[7];
         direccion = usuarioDatos[8];
         edad = usuarioDatos[9];
+        Log.i("Imagen",usuarioDatos[10]);
         foto = Base64.decode(usuarioDatos[10],Base64.DEFAULT);
     }
 
     private void consultarEvents() {
-       /* SQLiteDatabase db = controlBD1.getWritableDatabase();
+        SQLiteDatabase db = controlBD1.getWritableDatabase();
         Cursor cursor=db.rawQuery("SELECT * FROM "+ controladorBD1.DatosTablaEvent.NOMBRE_TABLA,null);
-        Events evt= new Events();
+        Events evt;
         listaEventos = new ArrayList<Events>();
         listaEventos1 = new ArrayList<Events>();
         if(cursor.getCount()>0) {
             while (cursor.moveToNext()) {
+                evt= new Events();
                 String nombre = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE));
                 String fecha = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_FECHA));
                 String informacion = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_INFORMACION));
@@ -206,12 +214,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
-       /*
-            Fragment fragment = null;
-            crearEvento frag = new crearEvento();
-            fragment = frag;
-            getFragmentManager().beginTransaction().replace(R.id.main_content,fragment).commit();*/
-
     }
 
     @Override
@@ -262,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Integer... params) {
 
-            int tiemp = params[0]-50;
+            int tiemp = params[0];
             for(int i = 0; i <= tiemp; i++){
                 hilo();
             }
@@ -271,9 +273,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
+            ActualizarBD actualizarBD = new ActualizarBD(context);
             volveraIniciar();
             Toast.makeText(getApplicationContext(), "Se actualizo los eventos", Toast.LENGTH_LONG).show();
-
         }
     }
 

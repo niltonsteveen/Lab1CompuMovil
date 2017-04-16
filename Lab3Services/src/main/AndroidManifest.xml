@@ -18,6 +18,7 @@
         <activity android:name=".Register" />
         <activity android:name=".MainActivity" />
         <activity android:name=".EditarPerfil" />
+        <activity android:name=".CreaEvent"/>
     </application>
 
 </manifest>

@@ -30,7 +30,7 @@ public class CreaEvent extends AppCompatActivity {
 
     EditText etNombre,etFecha,etInformacion,etOrganizador,etPais,etDepartamento,etCiudad,etLugar,etPuntuacion;
     ImageView imgEvento;
-  //  controladorBD1 controlBD1;
+    controladorBD1 controlBD1;
     Button btnGuardar, btnCambiarImg;
     Button cambiarFoto;
     List<Events> listaEventos;
@@ -50,14 +50,14 @@ public class CreaEvent extends AppCompatActivity {
         etLugar = (EditText)findViewById(R.id.etLugarEven);
         etPuntuacion = (EditText)findViewById(R.id.etPuntuacionEven);
         imgEvento = (ImageView)findViewById(R.id.img_evenPerfil);
-   //     controlBD1 = new controladorBD1(getApplication());
+        controlBD1 = new controladorBD1(getApplication());
 
         cambiarFoto = (Button)findViewById(R.id.btnCambiarFotoEvem);
         btnGuardar = (Button)findViewById(R.id.btnGuardarEven);
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              /*  SQLiteDatabase db = controlBD1.getWritableDatabase();
+                SQLiteDatabase db = controlBD1.getWritableDatabase();
                 ContentValues valores = new ContentValues();
                 valores.put(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE, etNombre.getText().toString());
                 valores.put(controladorBD1.DatosTablaEvent.COLUMN_FECHA, etFecha.getText().toString());
@@ -70,17 +70,10 @@ public class CreaEvent extends AppCompatActivity {
                 valores.put(controladorBD1.DatosTablaEvent.COLUMN_PUNTUACION, etPuntuacion.getText().toString());
                 valores.put(controladorBD1.DatosTablaEvent.COLUMN_FOTO,imageViewToByte(imgEvento));
 
-                Long emailGuardado = db.insert(controladorBD1.DatosTablaEvent.NOMBRE_TABLA,
+                Long eventoGuardado = db.insert(controladorBD1.DatosTablaEvent.NOMBRE_TABLA,
                         controladorBD1.DatosTablaEvent.COLUMN_ID,valores);
-                Toast.makeText(getApplication(),"Se guardo el evento"+emailGuardado, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplication(),"Se guardo el evento"+eventoGuardado, Toast.LENGTH_LONG).show();
                 finish();
-                /*9
-                consultarEvents();
-                Fragment fragment = null;
-                eventos even = new eventos();
-                even.setLista(listaEventos);
-                fragment = even;
-                getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();*/
             }
         });
 
@@ -134,37 +127,6 @@ public class CreaEvent extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void consultarEvents() {
-        /*SQLiteDatabase db = controlBD1.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + controladorBD1.DatosTablaEvent.NOMBRE_TABLA, null);
-        listaEventos = new ArrayList<Events>();
-        while (cursor.moveToNext()) {
-            Events evt = new Events();
-            String nombre = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE));
-            String fecha = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_FECHA));
-            String informacion = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_INFORMACION));
-            String organizador = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_ORGANIZADOR));
-            String pais = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_PAIS));
-            String departamento = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_DEPARTAMENTO));
-            String ciudad = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_CIUDAD));
-            String lugar = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_LUGAR));
-            String puntuacion = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_PUNTUACION));
-            byte[] foto = cursor.getBlob(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_FOTO));
-
-            evt.setNombre(nombre);
-            evt.setFecha(fecha);
-            evt.setInformación(informacion);
-            evt.setOrganizador(organizador);
-            evt.setPais(pais);
-            evt.setDepartamento(departamento);
-            evt.setCiudad(ciudad);
-            evt.setLugar(lugar);
-            evt.setPuntuacion(puntuacion);
-            evt.setFoto(foto);
-
-            listaEventos.add(evt);
-        }*/
-    }
 
     private byte[] imageViewToByte(ImageView imgUsuario) {
         Bitmap bitmap = ((BitmapDrawable)imgUsuario.getDrawable()).getBitmap();

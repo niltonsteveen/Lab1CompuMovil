@@ -42,6 +42,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        ActualizarBD actualizarBD = new ActualizarBD(this);
+
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         valor = pref.getBoolean("sesion_activa",false);
         Log.i("Estado ",valor+"");
