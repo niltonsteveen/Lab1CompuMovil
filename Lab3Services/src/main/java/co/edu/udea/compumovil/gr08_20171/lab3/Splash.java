@@ -34,7 +34,6 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onFinish() {
                 Intent intent=new Intent(Splash.this,LoginActivity.class);
-                intent.putExtra("sali","");
                 startActivity(intent);
                 finish();
             }
