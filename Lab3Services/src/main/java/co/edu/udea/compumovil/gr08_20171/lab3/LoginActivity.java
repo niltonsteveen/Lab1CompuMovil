@@ -18,12 +18,12 @@ import android.widget.Toast;
 public class LoginActivity extends AppCompatActivity {
 
     private Button btnRegistro,btnEntrar;
-    RadioButton rbRecordar;
-    boolean recor = false;
-    EditText etUsuario,etContrasena;
+    private RadioButton rbRecordar;
+    private boolean recor = false;
+    private EditText etUsuario,etContrasena;
    // controladorBD1 controlBD1;
-    Bundle bundle;
-    String valor;
+    private Bundle bundle;
+    private String valor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
