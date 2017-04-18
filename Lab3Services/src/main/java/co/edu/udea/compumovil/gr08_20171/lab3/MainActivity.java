@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             tiempo = Integer.parseInt(temp.substring(0,3));
         }
         time time = new time();
-        time.execute(tiempo);
+      //  time.execute(tiempo);
 
         controlBD1=new controladorBD1(getApplicationContext());
         setToolbar(); // Setear Toolbar como action bar
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void hilo(){
         try {
-            Thread.sleep(1000);
+            Thread.sleep(60000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Integer... params) {
 
-            int tiemp = params[0];
+            int tiemp = params[0]/60;
             for(int i = 0; i <= tiemp; i++){
                 hilo();
             }

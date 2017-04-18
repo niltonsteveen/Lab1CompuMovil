@@ -178,9 +178,9 @@ public class EditarPerfil extends AppCompatActivity {
             String iAge = params[9];
             String foto = params[10];
 
-            Log.i(TAG,"foto enB4 "+params[10]);
+            Log.i(TAG,"foto enB4 "+"https://apirest-eventos.herokuapp.com/user_set/"+iEmail);
 
-            HttpPut put = new HttpPut("https://apirest-eventos.herokuapp.com/allusers/");
+            HttpPut put = new HttpPut("https://apirest-eventos.herokuapp.com/user_set/"+iEmail+"/");
 
             put.setHeader("content-type","application/x-www-form-urlencoded");
 
@@ -219,7 +219,7 @@ public class EditarPerfil extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result){
             Log.i(TAG,"onPostExecute + "+respuesta);
-            Toast.makeText(getApplicationContext(), "Se actualizo usuario", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Se actualizo usuario, debe volver a iniciar sesión", Toast.LENGTH_LONG).show();
             Intent verPerfil = new Intent(EditarPerfil.this, LoginActivity.class);
             startActivity(verPerfil);
         }

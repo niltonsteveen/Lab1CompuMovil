@@ -30,11 +30,11 @@ public class AdaptadorRv
 
         public EventsViewHolder(View v) {
             super(v);
-            imagen = (ImageView) v.findViewById(R.id.imagenEvent);
-            tvNombre = (TextView) v.findViewById(R.id.nombreEvent);
+            imagen = (ImageView) v.findViewById(R.id.imagenEventWidget);
+            tvNombre = (TextView) v.findViewById(R.id.nombreEventWidget);
 
-            tvInformacion = (TextView) v.findViewById(R.id.informacionEvent);
-            tvPuntuacion=(TextView) v.findViewById(R.id.puntuacionEvent);
+            tvInformacion = (TextView) v.findViewById(R.id.informacionEventWidget);
+            tvPuntuacion=(TextView) v.findViewById(R.id.puntuacionEventWidget);
         }
     }
 
