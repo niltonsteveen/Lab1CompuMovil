@@ -5,52 +5,57 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
     private Button btnRegistro,btnEntrar;
-    private RadioButton rbRecordar;
-    private boolean recor = false;
-    private EditText etUsuario,etContrasena;
-   // controladorBD1 controlBD1;
-    private Bundle bundle;
-    private String valor;
+    RadioButton rbRecordar;
+    boolean recor = false;
+    EditText etUsuario,etContrasena;
+    TextView tvEstado;
+    Bundle bundle;
+    boolean valor;
+    String correo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        final Context context = this;
 
-        SharedPreferences sharprefs = getSharedPreferences("ArchivoSP",context.MODE_PRIVATE);
+        ActualizarBD actualizarBD = new ActualizarBD(this);
 
-        bundle = getIntent().getExtras();
-        if(bundle.getString("sali").toString().equals("cerrar"))
-        {
-            SharedPreferences sharpref = getPreferences(context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharpref.edit();
-            editor.putString("MiDato", "");
-            editor.commit();
-        }
-        SharedPreferences sharpref = getPreferences(context.MODE_PRIVATE);
-        valor = sharpref.getString("MiDato","");
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        valor = pref.getBoolean("sesion_activa",false);
+        Log.i("Estado ",valor+"");
 
         btnRegistro=(Button)findViewById(R.id.btnRegistrarse);
         etUsuario = (EditText)findViewById(R.id.etUserLo);
         etContrasena = (EditText)findViewById(R.id.etPassLo);
         btnEntrar = (Button)findViewById(R.id.btnLogin);
-        rbRecordar = (RadioButton)findViewById(R.id.rbRecordar);
-      //  controlBD1 = new controladorBD1(getApplicationContext());
-        if(valor.equals("")) {
+        tvEstado = (TextView)findViewById(R.id.tvEstaActu);
+
+        if(!valor){
+            tvEstado.setText("Ingresar datos...");
             btnRegistro.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -59,98 +64,28 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
 
-            rbRecordar.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    recor = !recor;
-                    rbRecordar.setChecked(recor);
-                }
-            });
-
-
             btnEntrar.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-/*
-                    attemptLogin();
-                    SQLiteDatabase db = controlBD1.getReadableDatabase();
-                    String[] projection = {
-                            controladorBD1.DatosTablaUser.COLUMN_EMAIL
-                    };
-                    String selection = controladorBD1.DatosTablaUser.COLUMN_USUARIO + " = ?"
-                            +" AND "
-                            +controladorBD1.DatosTablaUser.COLUMN_CONTRASENA + " = ?";
-                    String[] arqsel = {
-                            etUsuario.getText().toString(),
-                            etContrasena.getText().toString()
-                    };
-                    Cursor c = db.query(
-                            controladorBD1.DatosTablaUser.NOMBRE_TABLA,
-                            projection,
-                            selection,
-                            arqsel,
-                            null,           // don't group the rows
-                            null,           // don't filter by row groups
-                            null            // The sort order
-                    );
-
-                    System.out.println(c.toString());
-                    c.moveToFirst();
-                    if(c.getCount()==0){
-                        Toast.makeText(getApplicationContext(),"Usuario y/o contraseña erroneas", Toast.LENGTH_LONG).show();
-                    }
-                    else{
-                        if(recor)
-                        {
-                            SharedPreferences sharpref = getPreferences(context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharpref.edit();
-                            editor.putString("MiDato", etUsuario.getText().toString());
-                            editor.commit();
-                        }
-                        Intent verPerfil = new Intent(LoginActivity.this,MainActivity.class);
-
-                        System.out.println(c.getString(0));
-                        verPerfil.putExtra("user",c.getString(0));
-                        startActivity(verPerfil);
-
-
-                    }*/
+                    tvEstado.setText("Iniciando sesión...");
+                    correo = "";
+                    ObtenerUser tarea = new ObtenerUser();
+                    tarea.execute(etUsuario.getText().toString());
                 }
             });
-        }/*
-        else{
-            SQLiteDatabase db = controlBD1.getReadableDatabase();
-            String[] projection = {
-                    controladorBD1.DatosTablaUser.COLUMN_EMAIL
-            };
-            String selection = controladorBD1.DatosTablaUser.COLUMN_USUARIO + " = ?";
-            String[] arqsel = {
-                    valor
-            };
-            Cursor c = db.query(
-                    controladorBD1.DatosTablaUser.NOMBRE_TABLA,
-                    projection,
-                    selection,
-                    arqsel,
-                    null,           // don't group the rows
-                    null,           // don't filter by row groups
-                    null            // The sort order
-            );
-            c.moveToFirst();
-            if(c.getString(0).equals(""))
-            {
-                SharedPreferences.Editor editor = sharpref.edit();
-                editor.putString("MiDato", "");
-                editor.commit();
-            }
-            else
-            {
-                Intent verPerfil = new Intent(LoginActivity.this, MainActivity.class);
-                verPerfil.putExtra("user", c.getString(0));
-                startActivity(verPerfil);
-            }
-
-        }*/
+        }
+        else {
+            etUsuario.setEnabled(false);
+            etContrasena.setEnabled(false);
+            btnEntrar.setEnabled(false);
+            btnRegistro.setEnabled(false);
+            tvEstado.setText("Iniciando sesión...");
+            SharedPreferences sharpref = getSharedPreferences("Preferent",this.MODE_PRIVATE);
+            correo = sharpref.getString("correoUser","no");
+            Log.i("Correo",correo);
+            ObtenerUser tarea = new ObtenerUser();
+            tarea.execute(correo);
+        }
     }
 
     private void attemptLogin() {
@@ -182,6 +117,86 @@ public class LoginActivity extends AppCompatActivity {
             // form field with an error.
             focusView.requestFocus();
         }
+    }
+
+
+    //tarea asincrona para llamar
+    public class ObtenerUser extends AsyncTask<String,Void,Void> {
+        //campos a recibir
+        String oUsuario, oClave, oName, oCorreo, oPhone, oCountry, oDepartment, oCity, oDirection, oAge, oPhoto;
+
+
+        @Override
+        protected Void doInBackground(String... params){
+            Log.i("ConsultaUser","doInBackground");
+            HttpClient httpClient = new DefaultHttpClient();
+
+            String sCorreo = params[0];
+            Log.i("correo actual",sCorreo);
+            HttpGet get = new HttpGet("https://apirest-eventos.herokuapp.com/user_set/" + sCorreo);
+            get.setHeader("Content-type","application/json");
+
+            try{
+
+                HttpResponse resp = httpClient.execute(get);
+                String respString = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respString);
+                oUsuario = respJSON.getString("username");
+                oClave = respJSON.getString("password");
+                oName = respJSON.getString("name");
+                oCorreo = respJSON.getString("email");
+                oPhone = respJSON.getString("phone");
+                oCountry = respJSON.getString("country");
+                oDepartment = respJSON.getString("department");
+                oCity = respJSON.getString("city");
+                oDirection = respJSON.getString("direction");
+                oAge = respJSON.getString("age");
+                oPhoto = respJSON.getString("photo");
+            }
+            catch (Exception ex)
+            {
+                Log.e("ServicioRest","Error!",ex);
+                ex.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result){
+            tvEstado.setText("Sesión iniciada...");
+            Log.i("ServicioRest","onPostExecute");
+            Log.e("Correo-----------", correo);
+            if(correo.equals("")) {
+                 if (oClave.equals(etContrasena.getText().toString())) {
+                    String[] datos = {
+                            oUsuario, oClave, oName, oCorreo, oPhone, oCountry, oDepartment, oCity, oDirection, oAge, oPhoto
+                    };
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("datos", datos);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Usuario y/o contraseña erroneas", Toast.LENGTH_LONG).show();
+                }
+            }
+            else{
+                String[] datos = {
+                        oUsuario, oClave, oName, oCorreo, oPhone, oCountry, oDepartment, oCity, oDirection, oAge, oPhoto
+                };
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.putExtra("datos", datos);
+                startActivity(intent);
+            }
+        }
+
+        @Override
+        protected void onPreExecute(){
+            Log.i("ServicioRest","onPreExecute");
+            //antes de la ejecucion
+
+        }
+
     }
 }
 

@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SwitchPreference
-        android:key="editar_perfil"
-        android:title="Activar opción de configuración"
-        android:summary="Si usted va a editar su perfil se debe activar esta opción para habilitar el botón de dciha función."
-        android:defaultValue="true"/>
-
+    <ListPreference
+        android:entries="@array/texto_entries"
+        android:entryValues="@array/texto_values"
+        android:key="tiempoActu"
+        android:summary="Seleccione cada cuantos segundo se debe actualizar los eventos"
+        android:title="Tiempo de sincronización"
+        />
 
     <SwitchPreference
         android:key="sesion_activa"
         android:title="Mantener sesión activa"
         android:summary="Si usted será el único que va utilizar esta aplicación en el celular, se recomienda tener esta opción activada."
-        android:defaultValue="true"/>
+        android:defaultValue="false" />
 
     <CheckBoxPreference
         android:key="notificaciones_on"

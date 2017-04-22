@@ -3,11 +3,7 @@
     package="co.edu.udea.compumovil.gr08_20171.lab3">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
         android:icon="@drawable/logopng"
@@ -27,7 +23,16 @@
         <activity android:name=".Register" />
         <activity android:name=".MainActivity" />
         <activity android:name=".EditarPerfil" />
-        <activity android:name=".CreaEvent"></activity>
+        <activity android:name=".CreaEvent" />
+        <receiver android:name=".AppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_info" />
+        </receiver>
     </application>
 
 

@@ -46,4 +46,6 @@
     <string name="errorCelular">numero de contacto invalido</string>
     <string name="errorGeneral">campo obligatorio</string>
     <string name="errorEdad">la edad es incorrecta</string>
+    <string name="appwidget_text">Lab3-widget</string>
+    <string name="add_widget">Add widget</string>
 </resources>
