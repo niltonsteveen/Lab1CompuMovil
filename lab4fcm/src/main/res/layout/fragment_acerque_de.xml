@@ -1,0 +1,79 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="co.edu.udea.compumovil.gr08_20171.lab2.AcerqueDe"
+    android:background="@color/letter">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="236dp"
+            android:src="@drawable/compumovil"
+            android:layout_weight="0.05" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="224dp"
+            android:src="@drawable/desc"
+            />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:src="@drawable/profes"
+                android:id="@+id/imgvProfes" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_centerInParent="true"
+                android:src="@drawable/sebastian"
+                android:layout_width="210dp"
+                android:layout_height="183dp"
+                android:layout_marginBottom="16dp"
+                android:scaleType="centerCrop"
+                android:layout_below="@+id/imgvProfes"
+                android:id="@+id/circleSebas" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sebastián Guzmán Obando"
+                android:textSize="20dp"
+                android:id="@+id/tvSebas"
+                android:layout_below="@+id/circleSebas"
+                android:layout_centerHorizontal="true"
+                />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_marginTop="30dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/jaiber"
+                android:layout_width="210dp"
+                android:layout_height="183dp"
+                android:layout_marginBottom="16dp"
+                android:scaleType="centerCrop"
+                android:layout_below="@+id/tvSebas"
+                android:id="@+id/circleJaiber" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jaiber Yepes"
+                android:textSize="20dp"
+                android:layout_below="@+id/circleJaiber"
+                android:layout_centerHorizontal="true"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+    </ScrollView>
+</FrameLayout>

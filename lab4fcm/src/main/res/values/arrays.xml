@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="texto_entries">
+        <item>60 seg</item>
+        <item>120 seg </item>
+        <item>180 seg</item>
+    </array>
+    <array name="texto_values">
+        <item>60 s</item>
+        <item>120 s</item>
+        <item>180 s</item>
+    </array>
+</resources>

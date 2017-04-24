@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:entries="@array/texto_entries"
+        android:entryValues="@array/texto_values"
+        android:key="tiempoActu"
+        android:summary="Seleccione cada cuantos segundo se debe actualizar los eventos"
+        android:title="Tiempo de sincronización"
+        />
+
+    <SwitchPreference
+        android:key="sesion_activa"
+        android:title="Mantener sesión activa"
+        android:summary="Si usted será el único que va utilizar esta aplicación en el celular, se recomienda tener esta opción activada."
+        android:defaultValue="false" />
+
+    <CheckBoxPreference
+        android:key="notificaciones_on"
+        android:title="Autorizar notificaciones"
+        android:summary="Si desea recibir notificaciones sobre los eventos prontos suceder."
+        android:defaultValue="false"/>
+
+    <CheckBoxPreference
+        android:key="sonidos_noti_on"
+        android:title="Activar sonido de notificaciones"
+        android:summary="La próxima vez que se genere una notificación se le avisará por medio de un sonido"
+        android:defaultValue="false"/>
+</PreferenceScreen>
