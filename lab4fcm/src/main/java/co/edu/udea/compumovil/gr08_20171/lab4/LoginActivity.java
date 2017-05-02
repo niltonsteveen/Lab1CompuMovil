@@ -1,10 +1,13 @@
 package co.edu.udea.compumovil.gr08_20171.lab4;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,9 +15,22 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.RuntimeExecutionException;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -23,24 +39,26 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 public class LoginActivity extends AppCompatActivity {
 
     private Button btnRegistro,btnEntrar;
-    RadioButton rbRecordar;
-    boolean recor = false;
     EditText etUsuario,etContrasena;
     TextView tvEstado;
     Bundle bundle;
     boolean valor;
-    String correo;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private ProgressDialog progressDialog;
+    String TAG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        ActualizarBD actualizarBD = new ActualizarBD(this);
-
+        progressDialog = new ProgressDialog(this);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         valor = pref.getBoolean("sesion_activa",false);
         Log.i("Estado ",valor+"");
@@ -52,6 +70,11 @@ public class LoginActivity extends AppCompatActivity {
         tvEstado = (TextView)findViewById(R.id.tvEstaActu);
 
         if(!valor){
+            FirebaseApp.initializeApp(this);
+            if(mAuth != null){
+                mAuth.signOut();
+            }
+            mAuth = FirebaseAuth.getInstance();
             tvEstado.setText("Ingresar datos...");
             btnRegistro.setOnClickListener(new OnClickListener() {
                 @Override
@@ -65,23 +88,17 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     tvEstado.setText("Iniciando sesión...");
-                    correo = "";
-                    ObtenerUser tarea = new ObtenerUser();
-                    tarea.execute(etUsuario.getText().toString());
+                    progressDialog.setMessage("Iniciando sesión");
+                    signIn(etUsuario.getText().toString(),etContrasena.getText().toString());
                 }
             });
         }
-        else {
-            etUsuario.setEnabled(false);
-            etContrasena.setEnabled(false);
-            btnEntrar.setEnabled(false);
-            btnRegistro.setEnabled(false);
+        else
+        {
             tvEstado.setText("Iniciando sesión...");
-            SharedPreferences sharpref = getSharedPreferences("Preferent",this.MODE_PRIVATE);
-            correo = sharpref.getString("correoUser","no");
-            Log.i("Correo",correo);
-            ObtenerUser tarea = new ObtenerUser();
-            tarea.execute(correo);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 
@@ -116,84 +133,78 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
-    //tarea asincrona para llamar
-    public class ObtenerUser extends AsyncTask<String,Void,Void> {
-        //campos a recibir
-        String oUsuario, oClave, oName, oCorreo, oPhone, oCountry, oDepartment, oCity, oDirection, oAge, oPhoto;
-
-
-        @Override
-        protected Void doInBackground(String... params){
-            Log.i("ConsultaUser","doInBackground");
-            HttpClient httpClient = new DefaultHttpClient();
-
-            String sCorreo = params[0];
-            Log.i("correo actual",sCorreo);
-            HttpGet get = new HttpGet("https://apirest-eventos.herokuapp.com/user_set/" + sCorreo);
-            get.setHeader("Content-type","application/json");
-
-            try{
-
-                HttpResponse resp = httpClient.execute(get);
-                String respString = EntityUtils.toString(resp.getEntity());
-
-                JSONObject respJSON = new JSONObject(respString);
-                oUsuario = respJSON.getString("username");
-                oClave = respJSON.getString("password");
-                oName = respJSON.getString("name");
-                oCorreo = respJSON.getString("email");
-                oPhone = respJSON.getString("phone");
-                oCountry = respJSON.getString("country");
-                oDepartment = respJSON.getString("department");
-                oCity = respJSON.getString("city");
-                oDirection = respJSON.getString("direction");
-                oAge = respJSON.getString("age");
-                oPhoto = respJSON.getString("photo");
-            }
-            catch (Exception ex)
-            {
-                Log.e("ServicioRest","Error!",ex);
-                ex.printStackTrace();
-            }
-
-            return null;
+    private void signIn(String email, String password) {
+        if(email.equals("") || password.equals("")){
+            Toast.makeText(LoginActivity.this, "Datos incompletos", Toast.LENGTH_SHORT).show();
+            return;
         }
+        Log.d(TAG, "signIn:" + email);
+        // [START sign_in_with_email]
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
-        @Override
-        protected void onPostExecute(Void result){
-            tvEstado.setText("Sesión iniciada...");
-            Log.i("ServicioRest","onPostExecute");
-            Log.e("Correo-----------", correo);
-            if(correo.equals("")) {
-                 if (oClave.equals(etContrasena.getText().toString())) {
-                    String[] datos = {
-                            oUsuario, oClave, oName, oCorreo, oPhone, oCountry, oDepartment, oCity, oDirection, oAge, oPhoto
-                    };
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("datos", datos);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Usuario y/o contraseña erroneas", Toast.LENGTH_LONG).show();
-                }
+                        try {
+                            AuthResult resultado = task.getResult();
+                            Toast.makeText(LoginActivity.this, resultado.getUser().getUid(), Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            progressDialog.dismiss();
+                            startActivity(intent);
+                            finish();
+                            // obtener excepción
+                            if(task != null) {
+                                throw task.getException();
+                            }
+                        }
+                        catch (FirebaseAuthInvalidCredentialsException e){
+                            // mostrar excepción
+                            Toast.makeText(LoginActivity.this, "Datos incompletos", Toast.LENGTH_SHORT).show();
+                            return;
+                        }catch (RuntimeExecutionException e) {
+                            e.printStackTrace();
+                            if( e.getMessage().equals("com.google.firebase.auth.FirebaseAuthInvalidCredentialsException: The email address is badly formatted.") ){
+                                Toast.makeText(LoginActivity.this, "Ingrese una dirección de correo valida", Toast.LENGTH_SHORT).show();
+                            }
+                            else if( e.getMessage().equals("com.google.firebase.auth.FirebaseAuthInvalidCredentialsException: The password is invalid or the user does not have a password.") ){
+                                Toast.makeText(LoginActivity.this,"Datos incorrectos", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            //Toast.makeText(LoginActivity.this, e.getMessage()+"  oli", Toast.LENGTH_SHORT).show();
+                        }
+
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInWithEmail:failed", task.getException());
+                            //Toast.makeText(ActivityFirebase.this, R.string.auth_failed,Toast.LENGTH_SHORT).show();
+                        }
+
+                        if (!task.isSuccessful()) {
+                            tvEstado.setText("Fallo la autentificacón");
+                        }
+                    }
+                });
+    }
+
+    public void obtenerUser(String user) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
+        DatabaseReference userRef = ref.child(user);
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                tvEstado.setText(dataSnapshot.child("password").getValue().toString());
             }
-            else{
-                String[] datos = {
-                        oUsuario, oClave, oName, oCorreo, oPhone, oCountry, oDepartment, oCity, oDirection, oAge, oPhoto
-                };
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra("datos", datos);
-                startActivity(intent);
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
-        }
-
-        @Override
-        protected void onPreExecute(){
-            Log.i("ServicioRest","onPreExecute");
-            //antes de la ejecucion
-
-        }
-
+        });
     }
 }
 

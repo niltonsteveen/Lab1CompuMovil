@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "732580944434",
-    "firebase_url": "https://lab4fcm-2509a.firebaseio.com",
-    "project_id": "lab4fcm-2509a",
-    "storage_bucket": "lab4fcm-2509a.appspot.com"
+    "project_number": "774086827710",
+    "firebase_url": "https://laboratorio-4.firebaseio.com",
+    "project_id": "laboratorio-4",
+    "storage_bucket": "laboratorio-4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:732580944434:android:f004252bc2547298",
+        "mobilesdk_app_id": "1:774086827710:android:f004252bc2547298",
         "android_client_info": {
           "package_name": "co.edu.udea.compumovil.gr08_20171.lab4"
         }
       },
       "oauth_client": [
         {
-          "client_id": "732580944434-i0j93mdhg5r812fug5vrsrcf7fs28mf8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "co.edu.udea.compumovil.gr08_20171.lab4",
-            "certificate_hash": "adaf69366849b063882cfcffe092391a00b33135"
-          }
-        },
-        {
-          "client_id": "732580944434-vjr566v0n8v1jjg4cljps4jilhn4ff2e.apps.googleusercontent.com",
+          "client_id": "774086827710-jbfct5m8eonfkvk7hfimao4h9md1n83n.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDSs9V94628Y2UTDjppfz112RVIMMQIAdU"
+          "current_key": "AIzaSyDw3T02H2iEAvtcvX5AwzODx6RTWPl1tmo"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "732580944434-vjr566v0n8v1jjg4cljps4jilhn4ff2e.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

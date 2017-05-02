@@ -1,18 +1,16 @@
 package co.edu.udea.compumovil.gr08_20171.lab4;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,20 +18,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.List;
 
 public class CreaEvent extends AppCompatActivity {
@@ -45,6 +46,16 @@ public class CreaEvent extends AppCompatActivity {
     Button cambiarFoto;
     List<Events> listaEventos;
     byte[] imgB;
+    FirebaseAuth.AuthStateListener mAuthListener;
+    FirebaseAuth mAuth;
+    private ProgressDialog progressDialog;
+    private StorageReference mStorage;
+    String TAG;
+    DatabaseReference ref;
+    DatabaseReference eventsRef;
+    Uri imagenUri;
+    int idactual;
+
     final int REQUEST_CODE_GALLERY = 999;
 
     @Override
@@ -61,27 +72,38 @@ public class CreaEvent extends AppCompatActivity {
         etLugar = (EditText)findViewById(R.id.etLugarEven);
         etPuntuacion = (EditText)findViewById(R.id.etPuntuacionEven);
         imgEvento = (ImageView)findViewById(R.id.img_evenPerfil);
-        imgB = imageViewToByte(imgEvento);
         controlBD1 = new controladorBD1(getApplication());
+        //Firebase
+        FirebaseApp.initializeApp(this);
+        progressDialog = new ProgressDialog(this);
+        mAuth = FirebaseAuth.getInstance();
+        ref = FirebaseDatabase.getInstance().getReference();
+        eventsRef = ref.child("events");
+        mStorage = FirebaseStorage.getInstance().getReference();
+
+        eventsRef.child("idmayor").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                idactual = Integer.parseInt(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         cambiarFoto = (Button)findViewById(R.id.btnCambiarFotoEvem);
         btnGuardar = (Button)findViewById(R.id.btnGuardarEven);
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddEvent addEvent = new AddEvent();
-                addEvent.execute(
-                        etNombre.getText().toString(),
-                        etFecha.getText().toString(),
-                        etInformacion.getText().toString(),
-                        etOrganizador.getText().toString(),
-                        etPais.getText().toString(),
-                        etDepartamento.getText().toString(),
-                        etCiudad.getText().toString(),
-                        etLugar.getText().toString(),
-                        etPuntuacion.getText().toString(),
-                        Base64.encodeToString(imgB,Base64.DEFAULT)
-                );
+                if(imagenUri == null){
+                    Toast.makeText(CreaEvent.this, "Seleccione una imagen", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                subirImagen();
             }
         });
 
@@ -123,6 +145,7 @@ public class CreaEvent extends AppCompatActivity {
 
         if(requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null){
             Uri uri = data.getData();
+            imagenUri =uri;
             try {
                 InputStream inputStream = getContentResolver().openInputStream(uri);
 
@@ -135,88 +158,54 @@ public class CreaEvent extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
-    private byte[] imageViewToByte(ImageView imgUsuario) {
-        Bitmap bitmap = ((BitmapDrawable)imgUsuario.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
+    public String getRandomString() {
+        SecureRandom random = new SecureRandom();
+        return new BigInteger(130, random).toString(32);
     }
 
+    public void subirImagen() {
+        progressDialog.setMessage("Creando evento");
+        progressDialog.show();
+        final StorageReference filepath = mStorage.child("Events").child(getRandomString());
+        Log.i("la url de la imagen es",imagenUri.toString());
+        filepath.putFile(imagenUri).addOnSuccessListener(CreaEvent.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                progressDialog.dismiss();
+                Uri imgUri = taskSnapshot.getDownloadUrl();
+                eventsRef.child((idactual+1)+"")
+                        .child("name").setValue(etNombre.getText().toString());
+                eventsRef.child((idactual+1)+"")
+                        .child("date").setValue(etFecha.getText().toString());
+                eventsRef.child((idactual+1)+"")
+                        .child("information").setValue(etInformacion.getText().toString());
+                eventsRef.child((idactual+1)+"")
+                        .child("organizer").setValue(etOrganizador.getText().toString());
+                eventsRef.child((idactual+1)+"")
+                        .child("country").setValue(etPais.getText().toString());
+                eventsRef.child((idactual+1)+"")
+                        .child("department").setValue(etDepartamento.getText().toString());
+                eventsRef.child((idactual+1)+"")
+                        .child("city").setValue(etCiudad.getText().toString());
+                eventsRef.child((idactual+1)+"")
+                        .child("place").setValue(etLugar.getText().toString());
+                eventsRef.child((idactual+1)+"")
+                        .child("puntuation").setValue(etPuntuacion.getText().toString());
+                eventsRef.child((idactual+1)+"")
+                        .child("photo").setValue(imgUri.toString());
+                eventsRef.child("idmayor").setValue((idactual+1)+"");
+                Toast.makeText(getApplicationContext(), "Evento creado", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(CreaEvent.this, MainActivity.class);
+                startActivity(intent);
+                finish();
 
-    private class AddEvent extends AsyncTask<String, Void, Void> {
-        private String TAG = "AddEvent";
-        private String respuesta;
-
-        @Override
-        protected Void doInBackground(String... params){
-
-            Log.i(TAG,"doInBackgound");
-
-            HttpClient httpClient = new DefaultHttpClient();
-
-            String iName = params[0];
-            String iDate = params[1];;
-            String iInformation = params[2];
-            String iOrganizator = params[3];
-            String iCountry = params[4];
-            String iCity = params[5];
-            String iDepartment = params[6];
-            String iPlace = params[7];
-            String iPuntuation = params[8];
-            String foto = params[9];
-
-            Log.i(TAG,"foto enB4 "+params[9]);
-
-            HttpPost post = new HttpPost("https://apirest-eventos.herokuapp.com/allEvents/");
-
-            post.setHeader("content-type","application/x-www-form-urlencoded");
-
-            try{
-                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-                pairs.add(new BasicNameValuePair("name", iName));
-                pairs.add(new BasicNameValuePair("date", iDate));
-                pairs.add(new BasicNameValuePair("information", iInformation));
-                pairs.add(new BasicNameValuePair("organizator", iOrganizator));
-                pairs.add(new BasicNameValuePair("country", iCountry));
-                pairs.add(new BasicNameValuePair("department", iDepartment));
-                pairs.add(new BasicNameValuePair("city", iCity));
-                pairs.add(new BasicNameValuePair("place", iPlace));
-                pairs.add(new BasicNameValuePair("puntuation", iPuntuation));
-                pairs.add(new BasicNameValuePair("photo",foto));
-                post.setEntity(new UrlEncodedFormEntity(pairs));
-
-                HttpResponse resp = httpClient.execute(post);
-                String respStr = EntityUtils.toString(resp.getEntity());
-
-                JSONObject respJSON = new JSONObject(respStr);
-
-                respuesta = respJSON.toString();
             }
-            catch (Exception ex)
-            {
-                Log.e("ServicioRest","Error!",ex);
-                ex.printStackTrace();
+        }).addOnFailureListener(CreaEvent.this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(CreaEvent.this,e.getMessage(),Toast.LENGTH_SHORT).show();
             }
-
-            return null;
-
-        }
-
-        @Override
-        protected void onPostExecute(Void result){
-            Log.i(TAG,"onPostExecute + "+respuesta);
-            Toast.makeText(getApplicationContext(), "Se guardo el registro", Toast.LENGTH_LONG).show();
-            Intent verPerfil = new Intent(CreaEvent.this, MainActivity.class);
-            startActivity(verPerfil);
-        }
-
-        @Override
-        protected void onPreExecute(){
-            Log.i(TAG,"onPreExecute");
-
-        }
-
+        });
     }
 }

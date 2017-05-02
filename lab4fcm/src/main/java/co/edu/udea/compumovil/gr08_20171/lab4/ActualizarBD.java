@@ -5,42 +5,60 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Iterator;
 
 public class ActualizarBD {
 
     controladorBD1 controlBD1;
     Context context;
-    int[] ids;
+    String[][] events;
+    private FirebaseAuth mAuth;
+    private String TAG;
+    DatabaseReference ref;
+    DatabaseReference eventsRef;
     boolean ter;
 
     public ActualizarBD(Context context) {
         controlBD1 = new controladorBD1(context);
         creaVecDeIds();
-        ObtenerEvents obtenerEvents = new ObtenerEvents();
-        obtenerEvents.execute();
+        FirebaseApp.initializeApp(context);
+        mAuth = FirebaseAuth.getInstance();
+        ref = FirebaseDatabase.getInstance().getReference().child("events");
         this.context = context;
         ter = false;
+        ObtenerEvents();
     }
 
     private void creaVecDeIds() {
         SQLiteDatabase db = controlBD1.getWritableDatabase();
-        Cursor cursor=db.rawQuery("SELECT id FROM "+ controladorBD1.DatosTablaEvent.NOMBRE_TABLA,null);
-        ids = new int[cursor.getCount()];
+        Cursor cursor=db.rawQuery("SELECT * FROM "+ controladorBD1.DatosTablaEvent.NOMBRE_TABLA,null);
+        events = new String[cursor.getCount()][11];
         int cont = 0;
         if(cursor.getCount()>0) {
             while (cursor.moveToNext()) {
-                ids[cont] = cursor.getInt(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_ID));
+                events[cont][0] = cursor.getInt(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_ID))+"";
+                events[cont][1] = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE));
+                events[cont][2] = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_FECHA));
+                events[cont][3] = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_INFORMACION));
+                events[cont][4] = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_ORGANIZADOR));
+                events[cont][5] = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_PAIS));
+                events[cont][6] = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_DEPARTAMENTO));
+                events[cont][7] = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_CIUDAD));
+                events[cont][8] = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_LUGAR));
+                events[cont][9] = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_PUNTUACION));
+                events[cont][10] = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_FOTO));
                 cont++;
             }
         }
@@ -48,80 +66,54 @@ public class ActualizarBD {
 
     public boolean verificaID(int id){
         boolean result = false;
-        for(int i = 0;i<ids.length;i++ ){
-            if(ids[i]==id){
+        for(int i = 0;i<events.length;i++ ){
+            if(events[i][0].equals(id+"")){
                 result = true;
             }
         }
         return result;
     }
 
-    public class ObtenerEvents extends AsyncTask<Void,Void,Void> {
+    public void ObtenerEvents(){
+        Log.i("guardado ",  "Ando en actulizar eventos");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
+                while (items.hasNext()) {
+                    DataSnapshot item = items.next();
+                    if(!item.getKey().toString().equals("idmayor")) {
+                        if (!verificaID(Integer.parseInt(item.getKey().toString()))) {
+                            SQLiteDatabase db = controlBD1.getWritableDatabase();
+                            ContentValues valores = new ContentValues();
+                            valores.put(controladorBD1.DatosTablaEvent.COLUMN_ID, item.getKey().toString());
+                            valores.put(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE, item.child("name").getValue().toString());
+                            valores.put(controladorBD1.DatosTablaEvent.COLUMN_FECHA, item.child("date").getValue().toString());
+                            valores.put(controladorBD1.DatosTablaEvent.COLUMN_INFORMACION, item.child("information").getValue().toString());
+                            valores.put(controladorBD1.DatosTablaEvent.COLUMN_ORGANIZADOR, item.child("organizer").getValue().toString());
+                            valores.put(controladorBD1.DatosTablaEvent.COLUMN_PAIS, item.child("country").getValue().toString());
+                            valores.put(controladorBD1.DatosTablaEvent.COLUMN_DEPARTAMENTO, item.child("department").getValue().toString());
+                            valores.put(controladorBD1.DatosTablaEvent.COLUMN_CIUDAD, item.child("city").getValue().toString());
+                            valores.put(controladorBD1.DatosTablaEvent.COLUMN_LUGAR, item.child("place").getValue().toString());
+                            valores.put(controladorBD1.DatosTablaEvent.COLUMN_PUNTUACION, item.child("puntuation").getValue().toString());
+                            valores.put(controladorBD1.DatosTablaEvent.COLUMN_FOTO, item.child("photo").getValue().toString());
 
-        @Override
-        protected Void doInBackground(Void... params){
-            Log.i("ConsultaEvents","doInBackground");
-            HttpClient httpClient = new DefaultHttpClient();
+                            Long eventoGuardado = db.insert(controladorBD1.DatosTablaEvent.NOMBRE_TABLA,
+                                    controladorBD1.DatosTablaEvent.COLUMN_ID, valores);
+                            Log.i("guardado ", eventoGuardado + "");
+                        } else {
 
-            HttpGet get = new HttpGet("https://apirest-eventos.herokuapp.com/allEvents/");
-            get.setHeader("Content-type","application/json");
-
-            try{
-
-                HttpResponse resp = httpClient.execute(get);
-                String respString = EntityUtils.toString(resp.getEntity());
-
-                JSONArray arrayJSON = new JSONArray(respString);
-                JSONObject respJSON;
-                Log.i("cantidad ",arrayJSON.length()+"");
-
-                for(int i = 0; i<arrayJSON.length();i++){
-                    respJSON = arrayJSON.getJSONObject(i);
-                    if(!verificaID(respJSON.getInt("idEvent"))) {
-                        SQLiteDatabase db = controlBD1.getWritableDatabase();
-                        ContentValues valores = new ContentValues();
-                        valores.put(controladorBD1.DatosTablaEvent.COLUMN_ID, respJSON.getInt("idEvent"));
-                        valores.put(controladorBD1.DatosTablaEvent.COLUMN_NOMBRE, respJSON.getString("name"));
-                        valores.put(controladorBD1.DatosTablaEvent.COLUMN_FECHA, respJSON.getString("date"));
-                        valores.put(controladorBD1.DatosTablaEvent.COLUMN_INFORMACION, respJSON.getString("information"));
-                        valores.put(controladorBD1.DatosTablaEvent.COLUMN_ORGANIZADOR, respJSON.getString("organizator"));
-                        valores.put(controladorBD1.DatosTablaEvent.COLUMN_PAIS, respJSON.getString("country"));
-                        valores.put(controladorBD1.DatosTablaEvent.COLUMN_DEPARTAMENTO, respJSON.getString("department"));
-                        valores.put(controladorBD1.DatosTablaEvent.COLUMN_CIUDAD, respJSON.getString("city"));
-                        valores.put(controladorBD1.DatosTablaEvent.COLUMN_LUGAR, respJSON.getString("place"));
-                        valores.put(controladorBD1.DatosTablaEvent.COLUMN_PUNTUACION, respJSON.getInt("puntuation") + "");
-                        valores.put(controladorBD1.DatosTablaEvent.COLUMN_FOTO, Base64.decode(respJSON.getString("photo"), Base64.DEFAULT));
-
-                        Long eventoGuardado = db.insert(controladorBD1.DatosTablaEvent.NOMBRE_TABLA,
-                                controladorBD1.DatosTablaEvent.COLUMN_ID, valores);
-                        Log.i("guardado ", eventoGuardado + "");
-                    }
-                    else{
+                        }
                         Log.i("guardado ", "repetido");
-
                     }
                 }
-
-            }
-            catch (Exception ex)
-            {
-                Log.e("ServicioRest","Error!",ex);
-                ex.printStackTrace();
             }
 
-            return null;
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-        @Override
-        protected void onPostExecute(Void result){
-            Log.i("ServicioRest","onPostExecute");
-            ter = true;
-        }
-
-        @Override
-        protected void onPreExecute(){
-            Log.i("ServicioRest","onPreExecute");
-        }
+            }
+        });
 
     }
 

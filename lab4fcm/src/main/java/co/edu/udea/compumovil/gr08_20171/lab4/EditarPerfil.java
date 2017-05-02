@@ -1,18 +1,17 @@
 package co.edu.udea.compumovil.gr08_20171.lab4;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,21 +19,26 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 public class EditarPerfil extends AppCompatActivity {
 
@@ -42,20 +46,24 @@ public class EditarPerfil extends AppCompatActivity {
     EditText etUsuario, etContrasena, etNombre, etEmail, etCelular, etPais, etDepartamento,
             etCiudad, etDireccion, etEdad;
     ImageView imgUsuario;
-    byte[] imgByte;
-   // controladorBD1 controlBD1;
-    private String usuarioCorreo;
     Object[] datos;
     Bundle bundle;
+    boolean cambioFoto;
     final int REQUEST_CODE_GALLERY = 999;
+    ProgressDialog progressDialog;
+    StorageReference mStorage;
+    FirebaseAuth mAuth;
+    DatabaseReference ref;
+    DatabaseReference usersRef;
+    Uri imagenUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_perfil);
 
+        cambioFoto = false;
         bundle = getIntent().getExtras();
         datos = (Object[]) bundle.get("userCorreo");
-        usuarioCorreo = (String)datos[3];
         etUsuario = (EditText)findViewById(R.id.etUsuarioPerfil);
         etUsuario.setText((String)datos[0]);
         etContrasena = (EditText)findViewById(R.id.etContrasenaPerfil);
@@ -77,34 +85,26 @@ public class EditarPerfil extends AppCompatActivity {
         etEdad = (EditText)findViewById(R.id.etEdadPerfil);
         etEdad.setText((String)datos[9]);
         imgUsuario = (ImageView)findViewById(R.id.img_usuarioPerfil);
-        imgUsuario.setImageBitmap((Bitmap)datos[10]);
-        imgByte = imageViewToByte(imgUsuario);
-
-        //    controlBD1 = new controladorBD1(getApplicationContext());
+        imgUsuario.setImageBitmap(byteImgToBitmap((byte[])datos[10]));
+        //Firebase
+        FirebaseApp.initializeApp(this);
+        progressDialog = new ProgressDialog(this);
+        mAuth = FirebaseAuth.getInstance();
+        ref = FirebaseDatabase.getInstance().getReference();
+        usersRef = ref.child("users");
+        mStorage = FirebaseStorage.getInstance().getReference();
 
         btnActulizar = (Button)findViewById(R.id.btnActuPerfil);
         btnActulizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                actuUser tarea = new actuUser();
-                tarea.execute(
-                        etUsuario.getText().toString(),
-                        etContrasena.getText().toString(),
-                        etNombre.getText().toString(),
-                        etEmail.getText().toString(),
-                        etCelular.getText().toString(),
-                        etPais.getText().toString(),
-                        etDepartamento.getText().toString(),
-                        etCiudad.getText().toString(),
-                        etDireccion.getText().toString(),
-                        etEdad.getText().toString(),
-                        Base64.encodeToString(imgByte,Base64.DEFAULT)
-                );
+                actualizarFotoUser();
             }
         });
 
         btnCambiarImg = (Button)findViewById(R.id.btnCambiarFotoPerfil);
-        btnCambiarImg.setOnClickListener(new View.OnClickListener() {
+
+        imgUsuario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityCompat.requestPermissions(
@@ -140,11 +140,13 @@ public class EditarPerfil extends AppCompatActivity {
 
         if(requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null){
             Uri uri = data.getData();
+            imagenUri =uri;
             try {
                 InputStream inputStream = getContentResolver().openInputStream(uri);
 
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 imgUsuario.setImageBitmap(bitmap);
+                cambioFoto = true;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -152,88 +154,92 @@ public class EditarPerfil extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private class actuUser extends AsyncTask<String, Void, Void> {
-        private String TAG = "actuUser";
-        private String respuesta;
-
-        @Override
-        protected Void doInBackground(String... params){
-
-            Log.i(TAG,"doInBackgound");
-
-            HttpClient httpClient = new DefaultHttpClient();
-
-            String iUsername = params[0];
-            String iPassword = params[1];;
-            String iName = params[2];
-            String iEmail = params[3];
-            String iPhone = params[4];
-            String iCountry = params[5];
-            String iCity = params[6];
-            String iDepartment = params[7];
-            String iDirection = params[8];
-            String iAge = params[9];
-            String foto = params[10];
-
-            Log.i(TAG,"foto enB4 "+"https://apirest-eventos.herokuapp.com/user_set/"+iEmail);
-
-            HttpPut put = new HttpPut("https://apirest-eventos.herokuapp.com/user_set/"+iEmail+"/");
-
-            put.setHeader("content-type","application/x-www-form-urlencoded");
-
-            try{
-                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-                pairs.add(new BasicNameValuePair("username", iUsername));
-                pairs.add(new BasicNameValuePair("password", iPassword));
-                pairs.add(new BasicNameValuePair("name", iName));
-                pairs.add(new BasicNameValuePair("email", iEmail));
-                pairs.add(new BasicNameValuePair("phone", iPhone));
-                pairs.add(new BasicNameValuePair("country", iCountry));
-                pairs.add(new BasicNameValuePair("department", iDepartment));
-                pairs.add(new BasicNameValuePair("city", iCity));
-                pairs.add(new BasicNameValuePair("direction", iDirection));
-                pairs.add(new BasicNameValuePair("age", iAge));
-                pairs.add(new BasicNameValuePair("photo",foto));
-                put.setEntity(new UrlEncodedFormEntity(pairs));
-
-                HttpResponse resp = httpClient.execute(put);
-                String respStr = EntityUtils.toString(resp.getEntity());
-
-                JSONObject respJSON = new JSONObject(respStr);
-
-                respuesta = respJSON.toString();
-            }
-            catch (Exception ex)
-            {
-                Log.e("ServicioRest","Error!",ex);
-                ex.printStackTrace();
-            }
-
-            return null;
-
-        }
-
-        @Override
-        protected void onPostExecute(Void result){
-            Log.i(TAG,"onPostExecute + "+respuesta);
-            Toast.makeText(getApplicationContext(), "Se actualizo usuario, debe volver a iniciar sesión", Toast.LENGTH_LONG).show();
-            Intent verPerfil = new Intent(EditarPerfil.this, LoginActivity.class);
-            startActivity(verPerfil);
-        }
-
-        @Override
-        protected void onPreExecute(){
-            Log.i(TAG,"onPreExecute");
-
-        }
-
+    private Bitmap byteImgToBitmap(byte[] blob) {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(blob, 0, blob.length);
+        return bitmap;
     }
 
-    private byte[] imageViewToByte(ImageView imgUsuario) {
-        Bitmap bitmap = ((BitmapDrawable)imgUsuario.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
+    public String getRandomString() {
+        SecureRandom random = new SecureRandom();
+        return new BigInteger(130, random).toString(32);
+    }
+
+    public void actualizarUser() {
+        usersRef.child(mAuth.getCurrentUser().getUid())
+                .child("User").setValue(etUsuario.getText().toString());
+        usersRef.child(mAuth.getCurrentUser().getUid())
+                .child("password").setValue(etContrasena.getText().toString());
+        usersRef.child(mAuth.getCurrentUser().getUid())
+                .child("name").setValue(etNombre.getText().toString());
+        usersRef.child(mAuth.getCurrentUser().getUid())
+                .child("email").setValue(etEmail.getText().toString());
+        usersRef.child(mAuth.getCurrentUser().getUid())
+                .child("phone").setValue(etCelular.getText().toString());
+        usersRef.child(mAuth.getCurrentUser().getUid())
+                .child("country").setValue(etPais.getText().toString());
+        usersRef.child(mAuth.getCurrentUser().getUid())
+                .child("department").setValue(etDepartamento.getText().toString());
+        usersRef.child(mAuth.getCurrentUser().getUid())
+                .child("city").setValue(etCiudad.getText().toString());
+        usersRef.child(mAuth.getCurrentUser().getUid())
+                .child("direction").setValue(etDireccion.getText().toString());
+        usersRef.child(mAuth.getCurrentUser().getUid())
+                .child("age").setValue(etEdad.getText().toString());
+        progressDialog.dismiss();
+        Toast.makeText(getApplicationContext(), "El suario ha sido registrado", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(EditarPerfil.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void actualizarFotoUser() {
+        progressDialog.setMessage("Actualizando usuario");
+        progressDialog.show();
+        if(cambioFoto) {
+            usersRef.child(mAuth.getCurrentUser().getUid()).child("photo").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String urlImgLast = dataSnapshot.getValue().toString();
+                    Task<Void> task = FirebaseStorage.getInstance().getReferenceFromUrl(urlImgLast).delete();
+                    task.addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful())
+                                Toast.makeText(EditarPerfil.this, "Se pudo actualizar la foto", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(EditarPerfil.this, "Fallo la actulización de foto", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    });
+                    usersRef.child(mAuth.getCurrentUser().getUid()).child("photo").removeEventListener(this);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            final StorageReference filepath = mStorage.child("Photos").child(getRandomString());
+            Log.i("la url de la imagen es", imagenUri.toString());
+            filepath.putFile(imagenUri).addOnSuccessListener(EditarPerfil.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri imgUri = taskSnapshot.getDownloadUrl();
+                    Log.i("imagen en firebase es", imgUri.toString());
+                    usersRef.child(mAuth.getCurrentUser().getUid())
+                            .child("photo").setValue(imgUri.toString());
+                    actualizarUser();
+                }
+            }).addOnFailureListener(EditarPerfil.this, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressDialog.dismiss();
+                    Toast.makeText(EditarPerfil.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else{
+            actualizarUser();
+        }
     }
 }

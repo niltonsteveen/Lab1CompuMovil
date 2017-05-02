@@ -1,13 +1,13 @@
 package co.edu.udea.compumovil.gr08_20171.lab4;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -21,21 +21,26 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.EmptyStackException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,8 +50,14 @@ public class Register extends AppCompatActivity {
     EditText etUsuario, etContrasena, etNombre, etEmail, etCelular, etPais, etDepartamento,
             etCiudad, etDireccion, etEdad;
     ImageView imgUsuario;
-    byte[] imgByte;
-  //  controladorBD1 controlBD1;
+    FirebaseAuth.AuthStateListener mAuthListener;
+    FirebaseAuth mAuth;
+    private ProgressDialog progressDialog;
+    private StorageReference mStorage;
+    String TAG;
+    DatabaseReference ref;
+    DatabaseReference usersRef;
+    Uri imagenUri;
 
     final int REQUEST_CODE_GALLERY = 999;
     @Override
@@ -65,26 +76,25 @@ public class Register extends AppCompatActivity {
         etDireccion = (EditText)findViewById(R.id.etDireccionReg);
         etEdad = (EditText)findViewById(R.id.etEdadReg);
         imgUsuario = (ImageView)findViewById(R.id.img_usuarioReg);
-        imgByte = imageViewToByte(imgUsuario);
+//Firebase
+        FirebaseApp.initializeApp(this);
+        progressDialog = new ProgressDialog(this);
+        mAuth = FirebaseAuth.getInstance();
+        ref = FirebaseDatabase.getInstance().getReference();
+        usersRef = ref.child("users");
+        mStorage = FirebaseStorage.getInstance().getReference();
 
         btnGuardar = (Button)findViewById(R.id.btnGuardarCuenta);
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddUser tarea = new AddUser();
-                tarea.execute(
-                        etUsuario.getText().toString(),
-                        etContrasena.getText().toString(),
-                        etNombre.getText().toString(),
-                        etEmail.getText().toString(),
-                        etCelular.getText().toString(),
-                        etPais.getText().toString(),
-                        etDepartamento.getText().toString(),
-                        etCiudad.getText().toString(),
-                        etDireccion.getText().toString(),
-                        etEdad.getText().toString(),
-                        Base64.encodeToString(imgByte,Base64.DEFAULT)
-                );
+                if(imagenUri == null){
+                    Toast.makeText(Register.this, "Seleccione una imagen", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                crearCuenta(etEmail.getText().toString(),etContrasena.getText().toString());
+                subirImagen();
+                //etEdad.setText(eventsRef.child("h").getKey());
             }
         });
 
@@ -103,6 +113,7 @@ public class Register extends AppCompatActivity {
         });
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(requestCode == REQUEST_CODE_GALLERY){
@@ -113,7 +124,6 @@ public class Register extends AppCompatActivity {
             }
             else{
                 Toast.makeText(getApplicationContext(),"No tienes permiso para acceder a esta carpeta", Toast.LENGTH_LONG).show();
-
             }
             return;
         }
@@ -126,6 +136,7 @@ public class Register extends AppCompatActivity {
 
         if(requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null){
             Uri uri = data.getData();
+            imagenUri =uri;
             try {
                 InputStream inputStream = getContentResolver().openInputStream(uri);
 
@@ -144,6 +155,82 @@ public class Register extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
         byte[] byteArray = stream.toByteArray();
         return byteArray;
+    }
+
+    public String getRandomString() {
+        SecureRandom random = new SecureRandom();
+        return new BigInteger(130, random).toString(32);
+    }
+
+    public void subirImagen() {
+        progressDialog.setMessage("Registrando usuario");
+        progressDialog.show();
+        final StorageReference filepath = mStorage.child("Photos").child(getRandomString());
+        Log.i("la url de la imagen es",imagenUri.toString());
+        filepath.putFile(imagenUri).addOnSuccessListener(Register.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                progressDialog.dismiss();
+                Uri imgUri = taskSnapshot.getDownloadUrl();
+                usersRef.child(mAuth.getCurrentUser().getUid())
+                        .child("User").setValue(etUsuario.getText().toString());
+                usersRef.child(mAuth.getCurrentUser().getUid())
+                        .child("password").setValue(etContrasena.getText().toString());
+                usersRef.child(mAuth.getCurrentUser().getUid())
+                        .child("name").setValue(etNombre.getText().toString());
+                usersRef.child(mAuth.getCurrentUser().getUid())
+                        .child("email").setValue(etEmail.getText().toString());
+                usersRef.child(mAuth.getCurrentUser().getUid())
+                        .child("phone").setValue(etCelular.getText().toString());
+                usersRef.child(mAuth.getCurrentUser().getUid())
+                        .child("country").setValue(etPais.getText().toString());
+                usersRef.child(mAuth.getCurrentUser().getUid())
+                        .child("department").setValue(etDepartamento.getText().toString());
+                usersRef.child(mAuth.getCurrentUser().getUid())
+                        .child("city").setValue(etCiudad.getText().toString());
+                usersRef.child(mAuth.getCurrentUser().getUid())
+                        .child("direction").setValue(etDireccion.getText().toString());
+                usersRef.child(mAuth.getCurrentUser().getUid())
+                        .child("age").setValue(etEdad.getText().toString());
+                usersRef.child(mAuth.getCurrentUser().getUid())
+                        .child("photo").setValue(imgUri.toString());
+                Toast.makeText(getApplicationContext(), "El suario ha sido registrado", Toast.LENGTH_LONG).show();
+                mAuth.signOut();
+                Intent intent = new Intent(Register.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+        }).addOnFailureListener(Register.this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(Register.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void crearCuenta(String correo, String clave){
+
+        if(correo.equals("") || clave.equals("")){
+            Toast.makeText(Register.this, "Datos incompletos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        mAuth.createUserWithEmailAndPassword(correo, clave)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+                        // Si falla el registro, mostrar mensaje al usuario.
+                        // Si es correcto, el listener para el estado de la autenticación será notificado
+                        // y la lógica para manejar el usuario se puede realizar mediante el listener.
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(Register.this, "fallo la creación de la cuenta", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
     }
 
     public boolean isValidInfo(){
@@ -209,82 +296,4 @@ public class Register extends AppCompatActivity {
         return matcher.matches();
 
     }
-
-    private class AddUser extends AsyncTask<String, Void, Void>{
-        private String TAG = "AddUser";
-        private String respuesta;
-
-        @Override
-        protected Void doInBackground(String... params){
-
-            Log.i(TAG,"doInBackgound");
-
-            HttpClient httpClient = new DefaultHttpClient();
-
-            String iUsername = params[0];
-            String iPassword = params[1];;
-            String iName = params[2];
-            String iEmail = params[3];
-            String iPhone = params[4];
-            String iCountry = params[5];
-            String iCity = params[6];
-            String iDepartment = params[7];
-            String iDirection = params[8];
-            String iAge = params[9];
-            String foto = params[10];
-
-            Log.i(TAG,"foto enB4 "+params[10]);
-
-            HttpPost post = new HttpPost("https://apirest-eventos.herokuapp.com/allusers/");
-
-            post.setHeader("content-type","application/x-www-form-urlencoded");
-
-            try{
-                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-                pairs.add(new BasicNameValuePair("username", iUsername));
-                pairs.add(new BasicNameValuePair("password", iPassword));
-                pairs.add(new BasicNameValuePair("name", iName));
-                pairs.add(new BasicNameValuePair("email", iEmail));
-                pairs.add(new BasicNameValuePair("phone", iPhone));
-                pairs.add(new BasicNameValuePair("country", iCountry));
-                pairs.add(new BasicNameValuePair("department", iDepartment));
-                pairs.add(new BasicNameValuePair("city", iCity));
-                pairs.add(new BasicNameValuePair("direction", iDirection));
-                pairs.add(new BasicNameValuePair("age", iAge));
-                pairs.add(new BasicNameValuePair("photo",foto));
-                post.setEntity(new UrlEncodedFormEntity(pairs));
-
-                HttpResponse resp = httpClient.execute(post);
-                String respStr = EntityUtils.toString(resp.getEntity());
-
-                JSONObject respJSON = new JSONObject(respStr);
-
-                respuesta = respJSON.toString();
-            }
-            catch (Exception ex)
-            {
-                Log.e("ServicioRest","Error!",ex);
-                ex.printStackTrace();
-            }
-
-            return null;
-
-        }
-
-        @Override
-        protected void onPostExecute(Void result){
-            Log.i(TAG,"onPostExecute + "+respuesta);
-            Toast.makeText(getApplicationContext(), "Se guardo el registro", Toast.LENGTH_LONG).show();
-            Intent verPerfil = new Intent(Register.this, LoginActivity.class);
-            startActivity(verPerfil);
-        }
-
-        @Override
-        protected void onPreExecute(){
-            Log.i(TAG,"onPreExecute");
-
-        }
-
-    }
-
 }

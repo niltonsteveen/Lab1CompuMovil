@@ -122,7 +122,7 @@ public class per extends Fragment {
         datos[9] = edad;
         imgPerfil = (ImageView) view.findViewById(R.id.imgPerfil);
         imgPerfil.setImageBitmap(byteImgToBitmap(foto));
-        datos[10] = byteImgToBitmap(foto);
+        datos[10] = foto;
         btnActualizar = (Button)view.findViewById(R.id.btnEditPerfil);
 
         btnActualizar.setOnClickListener(new View.OnClickListener() {

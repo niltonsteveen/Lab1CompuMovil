@@ -24,7 +24,7 @@
 
     <!-- Nombre de Usuario -->
     <TextView
-        android:id="@+id/tvNombreMenu"
+        android:id="@+id/tvUsernameMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""
@@ -34,7 +34,6 @@
     <!-- Correo de la cuenta -->
     <TextView
         android:id="@+id/tvEmailMenu"
-        style="@style/Widget.AppCompat.Spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""

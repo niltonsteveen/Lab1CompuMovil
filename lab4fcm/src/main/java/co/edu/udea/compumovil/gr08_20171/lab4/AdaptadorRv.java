@@ -1,5 +1,6 @@
 package co.edu.udea.compumovil.gr08_20171.lab4;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -19,6 +22,7 @@ public class AdaptadorRv
         extends RecyclerView.Adapter<AdaptadorRv.EventsViewHolder>
         implements View.OnClickListener {
 
+    Context context;
     private View.OnClickListener listener;
     private List<Events> listaEvents;
 
@@ -52,12 +56,15 @@ public class AdaptadorRv
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.vistarv, viewGroup, false);
         v.setOnClickListener(this);
+        context = viewGroup.getContext();
         return new EventsViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(EventsViewHolder viewHolder, int i) {
         viewHolder.imagen.setImageBitmap(byteImgToBitmap(listaEvents.get(i).getFoto()));
+        Picasso.with(context).load("https://firebasestorage.googleapis.com/v0/b/laboratorio-4.appspot.com/o/Events%2Fcn3lu3g40m4r64fb9dtofg2bn8?alt=media&token=6ddc7514-0ebc-4df3-aace-421c13a8cf27").into(viewHolder.imagen);
+
         viewHolder.tvNombre.setText(listaEvents.get(i).getNombre());
        // viewHolder.tvFecha.setText(listaEvents.get(i).getFecha());
         viewHolder.tvInformacion.setText(listaEvents.get(i).getInformación());
