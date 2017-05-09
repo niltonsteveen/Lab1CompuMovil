@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 
@@ -110,7 +112,8 @@ public class MostrarEven extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_mostrar_even, container, false);
         imgEvt=(ImageView)view.findViewById(R.id.imgEvent);
-        imgEvt.setImageBitmap(byteImgToBitmap(this.getEventos().get(this.getSelected()).getFoto()));
+        Picasso.with(container.getContext()).load(this.getEventos().get(this.getSelected()).getFoto()).into(imgEvt);
+
 
         tvNombreEvt=(TextView)view.findViewById(R.id.tvNombreEvent);
         tvNombreEvt.setText(this.getEventos().get(this.getSelected()).getNombre());

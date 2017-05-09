@@ -6,8 +6,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.RemoteViews;
+
+import com.squareup.picasso.Picasso;
 
 /**
  * Implementation of App Widget functionality.
@@ -19,6 +23,7 @@ public class AppWidget extends AppWidgetProvider {
         String nombre = "";
         String informacion = "";
         String puntuacion = "";
+        String url = "";
         byte[] imagen = new byte[0];
 
        // ActualizarBD actualizarBD = new ActualizarBD(context);
@@ -44,16 +49,21 @@ public class AppWidget extends AppWidgetProvider {
                 String ciudad = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_CIUDAD));
                 String lugar = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_LUGAR));
                 puntuacion = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_PUNTUACION));
-                imagen = cursor.getBlob(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_FOTO));
+                url = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_FOTO));
             }
         }
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.app_widget);
-        views.setImageViewBitmap(R.id.imagenEventWidget, BitmapFactory.decodeByteArray(imagen, 0, imagen.length));
-        views.setTextViewText(R.id.nombreEventWidget, nombre);
-        views.setTextViewText(R.id.informacionEventWidget, informacion);
-        views.setTextViewText(R.id.puntuacionEventWidget, puntuacion);
+        ImageView imgWidget = new ImageView(context.getApplicationContext());
+        Picasso.with(context)
+                .load(url)
+                .placeholder(R.drawable.calendar)
+                .into(imgWidget);
+        views.setImageViewBitmap(R.id.imagenEventWidget, ((BitmapDrawable)imgWidget.getDrawable()).getBitmap());
+        views.setTextViewText(R.id.nombreEventWidget,"Evento: "+ nombre);
+        views.setTextViewText(R.id.informacionEventWidget,"Información: "+ informacion);
+        views.setTextViewText(R.id.puntuacionEventWidget,"Puntuación: "+ puntuacion);
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
 
@@ -76,6 +86,14 @@ public class AppWidget extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    public static void hilo(){
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
 

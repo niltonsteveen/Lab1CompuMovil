@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -27,15 +28,40 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.client.Header;
 
 public class CreaEvent extends AppCompatActivity {
 
@@ -194,6 +220,8 @@ public class CreaEvent extends AppCompatActivity {
                 eventsRef.child((idactual+1)+"")
                         .child("photo").setValue(imgUri.toString());
                 eventsRef.child("idmayor").setValue((idactual+1)+"");
+                AddEvent addEvent = new AddEvent();
+                addEvent.execute(etNombre.getText().toString());
                 Toast.makeText(getApplicationContext(), "Evento creado", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(CreaEvent.this, MainActivity.class);
                 startActivity(intent);
@@ -207,5 +235,60 @@ public class CreaEvent extends AppCompatActivity {
                 Toast.makeText(CreaEvent.this,e.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private class AddEvent extends AsyncTask<String, Void, Void> {
+        private String TAG = "NOTICIA";
+
+        @Override
+        protected Void doInBackground(String... params){
+
+            Log.i(TAG,"doInBackgound");
+            HttpClient httpClient = new DefaultHttpClient();
+
+            HttpPost post = new HttpPost("https://fcm.googleapis.com/fcm/send");
+            post.addHeader("content-type","application/json");
+            post.addHeader("authorization","key=AAAAtDsrnr4:APA91bGsikFUka0KuSOeE-zUCgRDgj2TIYQoj1HhyWLxye8O7kKu3i55IPvqncDXlL7wbfFb74ctscYYvkw6Q_HXgJYD-YNbmr9PbOYqwgw8z1My6LGHsi1w0mQnAE8UFa0i5nwqbsMo");
+
+            try{
+
+                String json = "";
+                JSONObject jsonObject = new JSONObject();
+                JSONObject jsonObject2 = new JSONObject();
+                jsonObject2.accumulate("title","Se ha creado un nuevo evento");
+                jsonObject2.accumulate("body","Evento: "+params[0]);
+                jsonObject.accumulate("to","eMfbZhtLn64:APA91bHLZ4GHTqe7KyJF5FbzHM6cTwslSfwJ4rVh3Rzwl10Osnmcne7r4NF16cAJ5jZZfnAJA2aGf-ncNecuoMO0JDHVriIx4YZiKbUR3iEuNU4BJGpfCWwpKlYcjC-YuTP9VQF0Axn2");
+                jsonObject.accumulate("notification",jsonObject2);
+                json = jsonObject.toString();
+                Log.d(TAG,json);
+                StringEntity stringEntity = new StringEntity(json);
+                post.setEntity((stringEntity));
+
+                HttpResponse resp = httpClient.execute(post);
+                String respStr = EntityUtils.toString(resp.getEntity());
+
+                Log.d(TAG,respStr);
+            }
+            catch (Exception ex)
+            {
+                Log.e("ServicioRest","Error!",ex);
+                ex.printStackTrace();
+            }
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void result){
+            Toast.makeText(getApplicationContext(), "Se guardo el registro", Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        protected void onPreExecute(){
+            Log.i(TAG,"onPreExecute");
+
+        }
+
     }
 }

@@ -16,9 +16,9 @@ public class Events {
     private String ciudad;
     private String lugar;
     private String puntuacion;
-    private byte[] foto;
+    private String foto;
 
-    public Events(String ciudad, String departamento, String direccion, String fecha, byte[] foto, String id, String información, String nombre, String pais, String puntuacion, String tipo) {
+    public Events(String ciudad, String departamento, String direccion, String fecha, String foto, String id, String información, String nombre, String pais, String puntuacion, String tipo) {
         this.ciudad = ciudad;
         this.departamento = departamento;
         this.lugar = direccion;
@@ -67,11 +67,11 @@ public class Events {
         this.fecha = fecha;
     }
 
-    public byte[] getFoto() {
+    public String getFoto() {
         return foto;
     }
 
-    public void setFoto(byte[] foto) {
+    public void setFoto(String foto) {
         this.foto = foto;
     }
 

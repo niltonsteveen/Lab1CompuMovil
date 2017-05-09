@@ -62,8 +62,11 @@ public class AdaptadorRv
 
     @Override
     public void onBindViewHolder(EventsViewHolder viewHolder, int i) {
-        viewHolder.imagen.setImageBitmap(byteImgToBitmap(listaEvents.get(i).getFoto()));
-        Picasso.with(context).load("https://firebasestorage.googleapis.com/v0/b/laboratorio-4.appspot.com/o/Events%2Fcn3lu3g40m4r64fb9dtofg2bn8?alt=media&token=6ddc7514-0ebc-4df3-aace-421c13a8cf27").into(viewHolder.imagen);
+
+        Picasso.with(context)
+                .load(listaEvents.get(i).getFoto())
+                .placeholder(R.drawable.calendar)
+                .into(viewHolder.imagen);
 
         viewHolder.tvNombre.setText(listaEvents.get(i).getNombre());
        // viewHolder.tvFecha.setText(listaEvents.get(i).getFecha());

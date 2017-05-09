@@ -111,18 +111,6 @@ public class MainActivity extends AppCompatActivity {
         eventsRef = FirebaseDatabase.getInstance().getReference().child("events");
 
         Log.i("Usuario actual:", user.getUid());
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("El cambio ocurrio en:", dataSnapshot.getKey().intern());
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -201,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 creaVecDeIds();
                 ObtenerEvents();
                 consultarEvents();
+                //consultarEventsFirebase();
                 eventos even = new eventos();
                 even.setLista(listaEventos);
                 even.setListaEventos1(listaEventos1);
@@ -248,9 +237,61 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+/*
+    private void consultarEventsFirebase() {
+        Log.i("guardado ",  "Ando en actulizar eventos");
+        final Events[] evt = new Events[1];
+        listaEventos = new ArrayList<Events>();
+        listaEventos1 = new ArrayList<Events>();
+        eventsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
+                while (items.hasNext()) {
+                    DataSnapshot item = items.next();
+                    if(!item.getKey().toString().equals("idmayor")&&item.child("photo").getValue()!=null) {
+                        evt[0] = new Events();
+                        String nombre = item.child("name").getValue().toString();
+                        String fecha = item.child("date").getValue().toString();
+                        String informacion = item.child("information").getValue().toString();
+                        String organizador = item.child("organizer").getValue().toString();
+                        String pais = item.child("country").getValue().toString();
+                        String departamento = item.child("department").getValue().toString();
+                        String ciudad = item.child("city").getValue().toString();
+                        String lugar = item.child("place").getValue().toString();
+                        String puntuacion = item.child("puntuation").getValue().toString();
+                        String url = item.child("photo").getValue().toString();
+
+                        evt[0].setNombre(nombre);
+                        evt[0].setInformación("Descripción: "+informacion);
+                        evt[0].setPuntuacion("Puntuación: "+puntuacion);
+                        evt[0].setFoto(url);
+
+                        listaEventos.add(evt[0]);
+
+                        evt[0].setNombre(nombre);
+                        evt[0].setInformación(informacion);
+                        evt[0].setPuntuacion(puntuacion);
+                        evt[0].setFoto(url);
+                        evt[0].setFecha(fecha);
+                        evt[0].setOrganizador(organizador);
+                        evt[0].setPais(pais);
+                        evt[0].setDepartamento(departamento);
+                        evt[0].setCiudad(ciudad);
+                        evt[0].setLugar(lugar);
+                        listaEventos1.add(evt[0]);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }*/
 
     private void consultarEvents() {
-        ImageView aux = new ImageView(getApplicationContext());
         SQLiteDatabase db = controlBD1.getWritableDatabase();
         Cursor cursor=db.rawQuery("SELECT * FROM "+ controladorBD1.DatosTablaEvent.NOMBRE_TABLA,null);
         Events evt;
@@ -270,24 +311,17 @@ public class MainActivity extends AppCompatActivity {
                 String puntuacion = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_PUNTUACION));
                 String url = cursor.getString(cursor.getColumnIndex(controladorBD1.DatosTablaEvent.COLUMN_FOTO));
 
-                Picasso.with(MainActivity.this)
-                        .load(Uri.parse(url))
-                        .placeholder(R.drawable.perfil1)
-                        .into(aux);
-
-                byte[] foto = imageViewToByte(aux);
-
                 evt.setNombre(nombre);
                 evt.setInformación("Descripción: "+informacion);
                 evt.setPuntuacion("Puntuación: "+puntuacion);
-                evt.setFoto(foto);
+                evt.setFoto(url);
 
                 listaEventos.add(evt);
 
                 evt.setNombre(nombre);
                 evt.setInformación(informacion);
                 evt.setPuntuacion(puntuacion);
-                evt.setFoto(foto);
+                evt.setFoto(url);
                 evt.setFecha(fecha);
                 evt.setOrganizador(organizador);
                 evt.setPais(pais);
@@ -414,7 +448,7 @@ public class MainActivity extends AppCompatActivity {
                 while (items.hasNext()) {
                     DataSnapshot item = items.next();
                     if(!item.getKey().toString().equals("idmayor")) {
-                        if (!verificaID(Integer.parseInt(item.getKey().toString()))) {
+                        if (!verificaID(Integer.parseInt(item.getKey().toString()))&&item.child("photo").getValue()!=null) {
                             SQLiteDatabase db = controlBD1.getWritableDatabase();
                             ContentValues valores = new ContentValues();
                             valores.put(controladorBD1.DatosTablaEvent.COLUMN_ID, item.getKey().toString());
